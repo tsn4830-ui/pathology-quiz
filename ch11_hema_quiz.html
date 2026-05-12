@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>病理學第十一章｜造血淋巴系統疾病</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0d0f14;--card:#161921;--card2:#1e2230;--border:#2a3050;--red:#9b59b6;--green:#3ecf8e;--gold:#f5a623;--blue:#4da6ff;--text:#e8ecf5;--muted:#8090b0}
+body{font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;line-height:1.6}
+header{background:linear-gradient(135deg,#1a0a20 0%,#0d0f14 70%);border-bottom:1px solid var(--border);padding:20px 14px 16px;text-align:center}
+.eyebrow{font-family:monospace;font-size:10px;letter-spacing:.2em;color:var(--red);margin-bottom:4px}
+h1{font-size:clamp(1.2rem,5vw,1.7rem);font-weight:700}
+h1 span{color:var(--red)}
+.subtitle{font-size:11px;color:var(--muted);margin-top:3px}
+.tabs{display:flex;border-bottom:1px solid var(--border)}
+.tab{flex:1;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:13px;padding:11px 0;cursor:pointer;font-family:inherit}
+.tab.active{color:var(--red);border-bottom-color:var(--red)}
+main{padding:14px 12px;max-width:640px;margin:0 auto}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 14px;margin-bottom:12px}
+.title-red{font-size:.9rem;font-weight:700;color:var(--red);margin-bottom:8px}
+.muted{font-size:.83rem;color:var(--muted);line-height:1.85}
+.btn{background:var(--red);border:none;border-radius:8px;color:#fff;font-family:inherit;font-size:.87rem;padding:10px 18px;cursor:pointer}
+.btn.ghost{background:var(--card2);border:1px solid var(--border);color:var(--muted)}
+.btn:hover{opacity:.9}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.prog-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.prog-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:2px;transition:width .4s;width:0%}
+.prog-lbl{font-family:monospace;font-size:11px;color:var(--muted);white-space:nowrap}
+.qnum{font-family:monospace;font-size:10px;color:var(--red);letter-spacing:.15em;margin-bottom:8px}
+.qtext{font-size:.94rem;line-height:1.8;margin-bottom:14px;font-weight:500}
+.opt{display:flex;gap:10px;width:100%;text-align:left;padding:10px 12px;margin-bottom:7px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);cursor:pointer;font-size:.87rem;line-height:1.6;font-family:inherit;transition:all .15s}
+.opt:hover:not(:disabled){border-color:#7a4699;background:rgba(155,89,182,0.08)}
+.opt:disabled{cursor:default}
+.opt-key{font-family:monospace;font-weight:700;color:var(--muted);flex-shrink:0;margin-top:1px}
+.opt.correct{background:#1a3a2a;border-color:var(--green)}
+.opt.correct .opt-key{color:var(--green)}
+.opt.wrong{background:#3a1a30;border-color:var(--red)}
+.opt.wrong .opt-key{color:var(--red)}
+.expl{display:none;background:rgba(77,166,255,0.09);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:10px 12px;font-size:.82rem;line-height:1.8;color:#b0c4e8;margin-top:10px}
+.expl.show{display:block}
+.expl b{color:var(--blue)}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.score-live{font-family:monospace;font-size:11px;color:var(--muted)}
+.result-big{text-align:center;padding:22px 0 14px}
+.result-pct{font-size:3.8rem;font-weight:800;color:var(--gold);line-height:1}
+.result-grade{font-size:1rem;color:var(--muted);margin-top:5px}
+.score-stats{display:flex;justify-content:center;gap:28px;margin:16px 0;flex-wrap:wrap}
+.stat-num{font-size:2rem;font-weight:700}
+.stat-lbl{font-size:10px;color:var(--muted);letter-spacing:.1em}
+.review-head{font-family:monospace;font-size:10px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:6px;margin:20px 0 10px}
+.review-item{border-radius:8px;padding:10px 12px;margin-bottom:7px;font-size:.83rem;line-height:1.7}
+.review-correct{background:rgba(62,207,142,0.05);border:1px solid rgba(62,207,142,0.25)}
+.review-wrong{background:rgba(155,89,182,0.06);border:1px solid #7a4699}
+.review-item .ok{color:var(--green);font-family:monospace;font-size:11px}
+.review-item .ng{color:var(--red);font-family:monospace;font-size:11px}
+.fc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.fc-counter{font-family:monospace;font-size:12px;color:var(--muted)}
+.fc-shuffle{background:var(--card2);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px;padding:5px 12px;cursor:pointer;font-family:inherit}
+.fc-wrap{perspective:900px;cursor:pointer;margin-bottom:12px}
+.fc-inner{position:relative;min-height:240px;transform-style:preserve-3d;transition:transform .55s}
+.fc-inner.flip{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:22px 18px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:240px}
+.fc-front{background:var(--card);border:1px solid var(--border)}
+.fc-back{background:var(--card2);border:1px solid #7a4699;transform:rotateY(180deg)}
+.fc-badge{font-family:monospace;font-size:10px;letter-spacing:.2em;margin-bottom:12px}
+.fc-front .fc-badge{color:var(--red)}
+.fc-back .fc-badge{color:var(--green);margin-bottom:10px}
+.fc-q{font-size:.95rem;line-height:1.8}
+.fc-ak{font-family:monospace;font-size:1.9rem;font-weight:700;color:var(--green);margin-bottom:6px}
+.fc-at{font-size:.92rem;line-height:1.7;margin-bottom:10px}
+.fc-exp{font-size:.79rem;color:var(--muted);line-height:1.7;border-top:1px solid var(--border);padding-top:10px;max-width:460px}
+.fc-nav{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:14px}
+.fc-dots{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.fc-dot{width:9px;height:9px;border-radius:50%;background:var(--border);cursor:pointer;transition:background .2s}
+.fc-dot.seen{background:#3a4060}
+.fc-dot.cur{background:var(--red)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">解剖生理病理學 III · 期末考範圍</div>
+  <h1>第十一章 <span>造血淋巴</span>系統疾病</h1>
+  <div class="subtitle">39 題精選 · 選擇題 + 閃卡 + 詳解</div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-tab="quiz">📝 測驗模式</button>
+  <button class="tab" data-tab="flash">🃏 閃卡記憶</button>
+</div>
+
+<main>
+  <div id="panel-quiz" class="panel active">
+    <div id="home-view">
+      <div class="card">
+        <div class="title-red">🩸 本章重點題型</div>
+        <div class="muted">貧血分類（缺鐵、惡性、溶血、地中海）· 白血病（AML/ALL/CML/CLL）· 淋巴瘤（Hodgkin/non-Hodgkin/MALT/濾泡）· 多發性骨髓瘤 · Reed-Sternberg細胞 · 費城染色體 · 凝血疾病 · 染色體轉位</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="startQuiz(false)">▶ 循序作答（39題）</button>
+        <button class="btn ghost" onclick="startQuiz(true)">🔀 隨機出題</button>
+      </div>
+    </div>
+
+    <div id="quiz-view" style="display:none">
+      <div class="prog-wrap">
+        <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+        <div class="prog-lbl" id="progLbl">1 / 39</div>
+      </div>
+      <div class="card" id="qCard"></div>
+      <div class="score-row">
+        <span class="score-live" id="scoreLive">✓ 0 &nbsp; ✗ 0</span>
+        <button class="btn" id="nextBtn" style="display:none" onclick="nextQ()">下一題 →</button>
+      </div>
+    </div>
+
+    <div id="result-view" style="display:none">
+      <div class="result-big">
+        <div class="result-pct" id="resultPct">0%</div>
+        <div class="result-grade" id="resultGrade"></div>
+        <div class="score-stats">
+          <div><div class="stat-num" style="color:var(--green)" id="resCorrect">0</div><div class="stat-lbl">答對</div></div>
+          <div><div class="stat-num" style="color:var(--red)" id="resWrong">0</div><div class="stat-lbl">答錯</div></div>
+          <div><div class="stat-num" style="color:var(--muted)" id="resTotal">39</div><div class="stat-lbl">總題</div></div>
+        </div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn" onclick="startQuiz(false)">重新練習</button>
+          <button class="btn ghost" onclick="startQuiz(true)">🔀 隨機再測</button>
+        </div>
+      </div>
+      <div class="review-head">全部答題回顧</div>
+      <div id="reviewList"></div>
+    </div>
+  </div>
+
+  <div id="panel-flash" class="panel">
+    <div class="fc-head">
+      <span class="fc-counter" id="fcCounter">1 / 39</span>
+      <button class="fc-shuffle" onclick="shuffleFC()">🔀 隨機</button>
+    </div>
+    <div class="fc-wrap" onclick="flipCard()">
+      <div class="fc-inner" id="fcInner">
+        <div class="fc-face fc-front">
+          <div class="fc-badge">🩸 題目 · 點擊翻面查看答案</div>
+          <div class="fc-q" id="fcQ"></div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-badge">✓ 答案</div>
+          <div class="fc-ak" id="fcAK"></div>
+          <div class="fc-at" id="fcAT"></div>
+          <div class="fc-exp" id="fcExp"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn ghost" onclick="navFC(-1)">← 上一張</button>
+      <span class="fc-counter" id="fcCounter2">1 / 39</span>
+      <button class="btn ghost" onclick="navFC(1)">下一張 →</button>
+    </div>
+    <div class="fc-dots" id="fcDots"></div>
+  </div>
+</main>
+
+<script>
+const Q=[
+{q:"奧爾氏桿（Auer rod）出現在下列何種疾病的病變細胞中？",opts:["巨母紅血球性貧血","何杰金氏淋巴瘤","多發性骨髓瘤","急性骨髓細胞性白血病（AML）"],ans:3,exp:"Auer rod（奧爾氏桿）為AML細胞質中針狀紅染嗜天青顆粒的融合體，由MPO（髓過氧化酶）酶顆粒結晶形成，是AML（特別是M3/APL）的診斷特徵。ALL不會出現Auer rod。"},
+{q:"陷窩細胞（lacunar cell）是下列哪一種淋巴瘤的特徵？",opts:["結節硬化型何杰金氏淋巴瘤","瀰散性大型B細胞淋巴瘤","膜區淋巴瘤","伯基特氏淋巴瘤"],ans:0,exp:"Lacunar cell（陷窩細胞）為結節硬化型Hodgkin淋巴瘤（NSHL）特徵，其細胞質因甲醛固定後收縮，留下空隙如陷窩。NSHL是Hodgkin淋巴瘤最常見亞型，好發年輕女性。"},
+{q:"有關何杰金氏淋巴瘤（Hodgkin lymphoma）的敘述，下列何者正確？",opts:["最常見的是淋巴球缺乏型","出現B症狀預後較好","顯微鏡下呈現星空般形態為特徵","Reed-Sternberg細胞為其特徵"],ans:3,exp:"Hodgkin淋巴瘤診斷依據是Reed-Sternberg細胞（瑞德－史登堡氏細胞，雙核如貓頭鷹眼）。最常見亞型為結節硬化型；B症狀（發燒、夜間盜汗、體重減輕>10%）代表預後較差；星空狀為Burkitt淋巴瘤特徵。"},
+{q:"下列何種疾病可引起自體脾切除（autosplenectomy）現象？",opts:["肝硬化","高雪氏病（Gaucher disease）","感染性單核球增多症","鐮狀細胞貧血（sickle cell anemia）"],ans:3,exp:"鐮狀細胞貧血因紅血球反覆鐮狀化阻塞脾臟微血管，導致多次梗塞和纖維化，最終脾臟萎縮鈣化（autosplenectomy）。脾臟功能喪失增加被莢膜細菌（如肺炎鏈球菌）感染風險。"},
+{q:"最常造成惡性貧血（pernicious anemia）的胃炎為？",opts:["急性胃炎","慢性表淺性胃炎","慢性增厚性胃炎","慢性萎縮性胃炎"],ans:3,exp:"慢性萎縮性胃炎（特別是自體免疫性，A型）→破壞壁細胞→內在因子（IF）缺乏→VitB12吸收障礙→惡性貧血（巨母紅血球性，大球性貧血）。"},
+{q:"下列哪一種淋巴瘤好發於孩童及青少年？",opts:["濾泡性淋巴瘤","瀰漫性大B細胞淋巴瘤","小淋巴球性淋巴瘤","伯基特氏淋巴瘤（Burkitt lymphoma）"],ans:3,exp:"Burkitt淋巴瘤好發於兒童青少年，地方型（非洲）與EBV感染相關，常侵犯下顎；散發型常侵犯腹腔。組織學特徵為「星空狀（starry sky）」外觀，t(8;14) MYC基因。"},
+{q:"兒童最常見的白血病是？",opts:["急性淋巴球性白血病（ALL）","急性骨髓細胞性白血病（AML）","慢性淋巴球性白血病（CLL）","慢性骨髓細胞性白血病（CML）"],ans:0,exp:"ALL是兒童最常見白血病（約75-80%），高峰期2-5歲。常見B-ALL（佔85%），預後相對較佳，染色體多倍體（hyperdiploidy）預後好；t(9;22)預後較差。"},
+{q:"有關缺鐵性貧血（IDA）之敘述，下列何者錯誤？",opts:["最常見原因是急性出血","可因腸吸收不良引起","女性月經出血導致的貧血屬於這一類","偶爾會出現骨髓外造血現象"],ans:0,exp:"IDA最常見原因是「慢性出血」（如月經、消化道腫瘤出血、痔瘡），不是急性出血。急性大量失血主要造成血容量不足，並非典型缺鐵性貧血。"},
+{q:"最常引起淋巴腺腫大的原因為何？",opts:["感染引起的淋巴腺發炎","淋巴瘤","癌細胞的轉移","白血病"],ans:0,exp:"反應性（感染性）淋巴腺炎是最常見的淋巴腺腫大原因。臨床上看到淋巴結腫大首先要考慮感染。淋巴瘤、轉移癌雖重要但較少見。"},
+{q:"下列有關多發性骨髓瘤（multiple myeloma）的敘述，何者錯誤？",opts:["源自漿細胞的惡性腫瘤","常因骨質破壞發生病理性骨折","血清的鈣離子濃度常低於正常值","容易造成骨髓瘤性腎病"],ans:2,exp:"MM特徵：CRAB → 高Ca↑、腎衰竭、貧血、骨溶解病灶。因蝕骨細胞活化造成「高血鈣」（不是低）。其他：M-protein、Bence-Jones蛋白尿、病理性骨折。"},
+{q:"費城染色體（Philadelphia chromosome）具有下列何種染色體變化？",opts:["第21對染色體多一條","第9對染色體部分轉位到第22對","第11對轉位到第14對","第7對部分缺失"],ans:1,exp:"費城染色體 = t(9;22)(q34;q11)，產生BCR-ABL融合基因，編碼過度活化的酪胺酸激酶。診斷CML的標誌；少數ALL也可出現（預後差）。標靶藥：Imatinib（Gleevec）。"},
+{q:"下列哪種情況較不會出現血液中白血球增多？",opts:["慢性骨髓性白血病","急性闌尾炎","燒燙傷後大量組織壞死","慢性萎縮性胃炎"],ans:3,exp:"慢性萎縮性胃炎為自體免疫性病變，主要影響VitB12吸收→巨母紅血球性貧血，並不引起白血球增多。其他選項皆會引起反應性或腫瘤性白血球增多。"},
+{q:"葡萄糖－6－磷酸鹽去氫酶缺乏症（G6PD deficiency）引起何種貧血？",opts:["缺鐵性","溶血性","失血性","巨母紅血球（megaloblastic）性"],ans:1,exp:"G6PD缺乏 → NADPH不足 → 紅血球無法清除氧化壓力 → 氧化性溶血。誘發因子：蠶豆、磺胺類藥、抗瘧疾藥。塗片可見Heinz body（變性血紅素）和咬痕細胞（bite cell）。X連鎖隱性遺傳。"},
+{q:"缺鐵性貧血（IDA）末梢血液紅血球形態變化？",opts:["正球性正色素性","小球性低色素性","大球性高色素性","正球性高色素性"],ans:1,exp:"IDA典型表現：小球性低色素性貧血（microcytic hypochromic anemia）。MCV<80 fL、MCH↓、MCHC↓。地中海型貧血也是小球性低色素性，需鑑別。"},
+{q:"骨頭外的局部性漿細胞瘤（localized plasmacytoma），最常發生在？",opts:["鼻竇","肝臟","小腸","四肢的軟組織"],ans:0,exp:"骨外漿細胞瘤（extraosseous plasmacytoma）約80%發生於上呼吸道（鼻腔、鼻竇、鼻咽）。骨內漿細胞瘤則多發生於脊椎、肋骨、顱骨。"},
+{q:"下列何種白血病，病患體內會出現費城染色體？",opts:["急性淋巴球性白血病（ALL）","慢性骨髓細胞性白血病（CML）","急性骨髓細胞性白血病（AML）","慢性淋巴球性白血病（CLL）"],ans:1,exp:"費城染色體是CML的標誌（>95% CML病人有Ph染色體）。少數成人ALL（約25%）也可出現（預後差）。標靶治療：Imatinib顯著延長CML存活期。"},
+{q:"下列淋巴腫瘤中，何者最常出現「貓頭鷹眼睛樣（owl-eye）」大細胞核？",opts:["末梢T細胞淋巴瘤","何杰金氏淋巴瘤","廣泛性B細胞淋巴瘤","伯基特氏淋巴瘤"],ans:1,exp:"Reed-Sternberg細胞具有特徵性「貓頭鷹眼」樣雙核（mirror-image nuclei），是Hodgkin淋巴瘤的診斷依據，背景常見淋巴球、漿細胞、嗜伊紅性白血球混雜。"},
+{q:"下列有關缺鐵性貧血（IDA）的診斷條件，何者錯誤？",opts:["平均紅血球色素值下降","血鐵蛋白（ferritin）量低","攜鐵蛋白（transferrin）飽和度高","平均紅血球體積降低"],ans:2,exp:"IDA典型實驗室：Ferritin↓（最敏感）、TIBC↑、Transferrin saturation↓（不是高！）、Serum iron↓、MCV↓、MCH↓。慢性病貧血則為Ferritin正常或↑、TIBC↓。"},
+{q:"何杰金氏淋巴瘤診斷最重要需見到下列哪種細胞？",opts:["Langhans巨細胞","Langerhans細胞","Kupffer細胞","Reed-Sternberg細胞"],ans:3,exp:"Reed-Sternberg細胞（RS細胞）是Hodgkin淋巴瘤的診斷標誌，CD15+/CD30+，源自B細胞，雙核呈鏡像分布如「貓頭鷹眼」。Langhans細胞為結核肉芽腫；Langerhans為皮膚抗原呈現細胞；Kupffer為肝竇巨噬細胞。"},
+{q:"全胃切除術（total gastrectomy）後發生貧血最容易出現？",opts:["攜鐵蛋白濃度上升","葡萄糖－6－磷酸去氫酶降低","血清中vitamin B12值降低","抗紅血球抗體上升"],ans:2,exp:"全胃切除→失去壁細胞→無法分泌內在因子（IF）→VitB12不能在迴腸末端被吸收→巨母紅血球性貧血（類似惡性貧血）。也會缺鐵（胃酸減少影響鐵吸收）。"},
+{q:"慢性骨髓性白血病（CML）與下列哪一個基因有關？",opts:["RAS","MYC","ABL（BCR-ABL）","NF-1"],ans:2,exp:"CML的BCR-ABL融合基因（由t(9;22)費城染色體形成）編碼過度活化的酪胺酸激酶。Imatinib（Gleevec）是針對此酶的標靶藥，徹底改變CML預後。MYC與Burkitt有關；NF-1與神經纖維瘤症。"},
+{q:"關於急性淋巴母細胞性白血病（ALL）的臨床與預後，何者錯誤？",opts:["可能出現骨髓功能抑制症狀","染色體多倍體（hyperdiploidy）預後較佳","相對於小孩，成人ALL預後較佳","部分病人有t(9;22) BCR-ABL"],ans:2,exp:"小孩ALL預後比成人佳（兒童5年存活率>85%，成人<50%）。預後好的因素：2-10歲、白血球<10萬、hyperdiploidy、t(12;21)。預後差：嬰兒、青少年/成人、t(9;22)、t(4;11)。"},
+{q:"下列何者是濾泡性淋巴瘤（follicular lymphoma）最常見染色體變化？",opts:["t(14,18)","t(15,17)","t(11,22)","t(4,11)"],ans:0,exp:"濾泡性淋巴瘤特徵：t(14;18)(q32;q21)→BCL2過度表達→抗凋亡。BCL2是惰性B細胞淋巴瘤標誌。其他：t(15;17)→APL；t(11;22)→Ewing；t(11;14)→Mantle cell；t(8;14)→Burkitt。"},
+{q:"下列何者為常見的小球性（microcytic）貧血的原因？",opts:["缺鐵性貧血","葉酸缺乏性貧血","維生素B12攝取缺乏性貧血","內在因子缺乏的惡性貧血"],ans:0,exp:"小球性貧血（MCV<80）四大原因：缺鐵性、地中海型、慢性病貧血、鐵粒幼血球性貧血。葉酸/B12缺乏屬於大球性（macrocytic, MCV>100）巨母紅血球性貧血。"},
+{q:"有關急性淋巴母細胞性白血病（ALL）的病理敘述，何者錯誤？",opts:["由不成熟的B或T淋巴性細胞構成","以T細胞型（T-ALL）為多","大多會表現TdT","大部分ALL會有染色體異常"],ans:1,exp:"ALL中B-ALL約佔85%，T-ALL僅約15%（青少年男性，常以縱膈腔腫塊表現）。TdT（terminal deoxynucleotidyl transferase）為前驅淋巴細胞的標誌。"},
+{q:"下列何者不是出血病症（bleeding disorder）之原因？",opts:["維生素D缺乏","Von Willebrand病","第Ⅷ因子缺乏（血友病A）","肝硬化"],ans:0,exp:"凝血相關維生素是「Vit K」（合成II、VII、IX、X因子）不是Vit D。Vit D缺乏造成佝僂病/軟骨症（骨骼問題）。其他選項皆造成凝血異常。"},
+{q:"下列何者不屬於B細胞（B lymphocyte）腫瘤？",opts:["慢性淋巴細胞白血病（CLL）","濾泡性淋巴瘤","伯基特氏淋巴瘤","蕈樣肉芽腫（mycosis fungoides）"],ans:3,exp:"Mycosis fungoides（蕈樣肉芽腫）是「皮膚T細胞淋巴瘤」（CTCL），表現為慢性紅斑、斑塊、腫瘤期皮膚病灶。Sézary syndrome為其白血病期。其他三者皆為B細胞淋巴瘤。"},
+{q:"胎兒紅血球母細胞症（erythroblastosis fetalis）的主要病因為何？",opts:["母親血紅素球蛋白β鏈異常","母親與胎兒血型不合（如Rh不合）","母親紅血球細胞膜異常","母親葉酸缺乏"],ans:1,exp:"Rh(-)母親懷有Rh(+)胎兒→第一胎致敏→第二胎以後IgG抗-D穿過胎盤→破壞胎兒紅血球→新生兒溶血病（HDN）。預防：Rh(-)母親第28週及產後72小時內施打RhIG（anti-D）。"},
+{q:"關於胃的MALT淋巴瘤（MALToma）之敘述，下列何者錯誤？",opts:["與慢性胃炎有關","可經由消除幽門螺旋桿菌治療，屬於低惡性度淋巴瘤","屬於T細胞淋巴瘤","顯微鏡下可見淋巴上皮病灶（lymphoepithelial lesions）"],ans:2,exp:"胃MALToma是「B細胞」邊緣區淋巴瘤（不是T細胞），與H. pylori慢性感染強烈相關。早期病人僅根除H. pylori即可治癒。組織學特徵：lymphoepithelial lesion。"},
+{q:"Heinz氏小體（變性的血紅素）最常見於下列哪種溶血性貧血？",opts:["免疫性溶血性貧血","地中海型貧血","鐮刀血球性貧血","葡萄糖－6－磷酸去氫酶缺乏症（G6PD）"],ans:3,exp:"G6PD缺乏→紅血球無法抗氧化→血紅素變性→形成Heinz body（嗜鹼性顆粒，需特殊染色才能看到）。脾臟咬除Heinz body產生「咬痕細胞」（bite cell）。"},
+{q:"B細胞濾泡性淋巴瘤常見下列何種染色體異常？",opts:["trisomy 12","t(14,18)","t(11,14)","t(9,22)"],ans:1,exp:"濾泡性淋巴瘤：t(14;18)→BCL2過表達→抗凋亡，B細胞累積。整理：trisomy12→CLL；t(11;14)→Mantle cell（cyclin D1）；t(9;22)→CML/ALL。"},
+{q:"下列何者是兒童最常見的白血病？",opts:["慢性骨髓性白血病（CML）","慢性淋巴細胞性白血病（CLL）","急性骨髓性白血病（AML）","急性淋巴母細胞性白血病（ALL）"],ans:3,exp:"年齡分布：兒童ALL最多 → 年輕成人AML → 中年CML → 老人CLL/AML。兒童ALL預後佳（化療治癒率達80-90%）。"},
+{q:"缺鐵性貧血（IDA）的紅血球，其形態有何特徵？",opts:["體積小且顏色深","體積小且顏色淺","體積大且顏色深","體積大且顏色淺"],ans:1,exp:"IDA：小球性（microcytic, MCV↓）+ 低色素性（hypochromic）→體積小且顏色淺。鏡下中央蒼白區擴大（central pallor>1/3）。鑑別：地中海型亦小球性低色素，但RBC數量正常或增加。"},
+{q:"下列造成血小板減少的原因中，何者最可能發現骨髓的巨核細胞（megakaryocyte）減少？",opts:["再生不良性貧血（aplastic anemia）","ITP","TTP","HUS"],ans:0,exp:"再生不良性貧血→全血球減少（pancytopenia）+骨髓「低細胞」狀態（hypocellular），所有造血細胞包括巨核細胞均減少。ITP/TTP/HUS的骨髓巨核細胞反而是正常或增加（周邊破壞所致）。"},
+{q:"血液中何種白血球增多與過敏性疾病（allergic diseases）最相關？",opts:["嗜中性球（neutrophil）","嗜酸性球（eosinophil）","單核球（monocyte）","淋巴球（lymphocyte）"],ans:1,exp:"嗜酸性球增多（eosinophilia）的常見原因：NAACP — Neoplasm（腫瘤如何杰金氏）、Allergy（過敏氣喘）、Addison disease、Collagen vascular disease、Parasites（寄生蟲）。"},
+{q:"下列何者是何杰金氏淋巴瘤（Hodgkin lymphoma）的腫瘤細胞？",opts:["淋巴母細胞（lymphoblast）","副免疫母細胞（paraimmunoblast）","瑞德－史登堡氏細胞（Reed-Sternberg cell）","卡哈爾－瑞齊烏斯氏細胞（Cajal-Retzius cell）"],ans:2,exp:"Reed-Sternberg細胞是Hodgkin淋巴瘤的腫瘤性細胞，源自生發中心B細胞。CD15+/CD30+，呈雙核（鏡像）「貓頭鷹眼」外觀。淋巴母細胞→ALL；Cajal-Retzius是大腦皮質神經元。"},
+{q:"下列何者是最常見的惡性淋巴瘤（malignant lymphoma）？",opts:["伯基特氏淋巴瘤","何杰金氏淋巴瘤","結外邊緣區淋巴瘤","瀰漫性大B細胞淋巴瘤（DLBCL）"],ans:3,exp:"DLBCL是最常見的非何杰金氏淋巴瘤（NHL），佔所有淋巴瘤約30-40%。臨床表現為快速生長的腫塊，屬侵襲性（aggressive），但化療治癒率達50-60%（R-CHOP方案）。"},
+{q:"有關血管受傷後止血作用之敘述，下列何者錯誤？",opts:["內皮素（endothelin）的釋放可導致血管收縮","血小板與血管內皮細胞上的選擇素（E-selectin）結合形成初級止血栓","組織因子（tissue factor）可活化凝血機制","凝血酵素調節素（thrombomodulin）可阻斷凝血機制"],ans:1,exp:"血小板形成初級止血栓是與「von Willebrand factor (vWF)」結合（透過GPIb受體），不是E-selectin（後者主要參與白血球黏附）。其他敘述皆正確：endothelin收縮血管、TF啟動外因性凝血、thrombomodulin抗凝。"},
+{q:"下列何種疾病會出現Barts氏血紅素（Hb Barts）？",opts:["甲型地中海型貧血（α-thalassemia）","鐮刀型貧血","遺傳性球狀紅血球症","缺鐵性貧血"],ans:0,exp:"Hb Barts（γ4）為四個γ鏈組成，出現於α-thalassemia（α鏈缺乏）。HbH為β4。最嚴重型：Hb Barts hydrops fetalis（4個α基因全缺，胎兒水腫死亡）。乙型則是HbA2和HbF升高。"}
+];
+const K=["A","B","C","D"];
+
+let order=[],idx=0,chosen=null,log=[];
+let fcOrder=Q.map((_,i)=>i),fcIdx=0,flipped=false,fcSeen=new Set([0]);
+
+document.getElementById('resTotal').textContent=Q.length;
+
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+    if(t.dataset.tab==='flash') renderFC();
+  });
+});
+
+function startQuiz(shuffle){
+  order=Q.map((_,i)=>i);
+  if(shuffle) order.sort(()=>Math.random()-.5);
+  idx=0; chosen=null; log=[];
+  document.getElementById('home-view').style.display='none';
+  document.getElementById('result-view').style.display='none';
+  document.getElementById('quiz-view').style.display='block';
+  renderQ();
+}
+
+function renderQ(){
+  const q=Q[order[idx]];
+  document.getElementById('progFill').style.width=((idx/Q.length)*100)+'%';
+  document.getElementById('progLbl').textContent=(idx+1)+' / '+Q.length;
+  document.getElementById('qCard').innerHTML=
+    '<div class="qnum">Q '+(idx+1)+'</div>'+
+    '<div class="qtext">'+q.q+'</div>'+
+    '<div id="opts">'+q.opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="opt-key">'+K[i]+'.</span><span>'+o+'</span></button>').join('')+'</div>'+
+    '<div class="expl" id="expl"><b>📋 解析：</b>'+q.exp+'</div>';
+  document.querySelectorAll('.opt').forEach(b=>{
+    b.addEventListener('click',()=>pickOpt(parseInt(b.dataset.i)));
+  });
+  document.getElementById('nextBtn').style.display='none';
+  updateScoreLive();
+}
+
+function pickOpt(i){
+  if(chosen!==null) return;
+  const q=Q[order[idx]];
+  chosen=i;
+  const btns=document.querySelectorAll('.opt');
+  btns.forEach(b=>b.disabled=true);
+  btns[i].classList.add(i===q.ans?'correct':'wrong');
+  if(i!==q.ans) btns[q.ans].classList.add('correct');
+  document.getElementById('expl').classList.add('show');
+  log.push({qi:order[idx],chosen:i,ok:i===q.ans});
+  updateScoreLive();
+  const nb=document.getElementById('nextBtn');
+  nb.style.display='inline-block';
+  nb.textContent=idx+1<Q.length?'下一題 →':'查看成績 🎯';
+}
+
+function updateScoreLive(){
+  const c=log.filter(l=>l.ok).length, w=log.filter(l=>!l.ok).length;
+  document.getElementById('scoreLive').innerHTML='✓ '+c+' &nbsp; ✗ '+w;
+}
+
+function nextQ(){
+  if(idx+1>=Q.length){ showResult(); return; }
+  idx++; chosen=null;
+  renderQ();
+}
+
+function showResult(){
+  document.getElementById('quiz-view').style.display='none';
+  document.getElementById('result-view').style.display='block';
+  const c=log.filter(l=>l.ok).length;
+  const pct=Math.round(c/Q.length*100);
+  document.getElementById('resultPct').textContent=pct+'%';
+  document.getElementById('resultGrade').textContent=
+    pct>=90?'🏆 優秀！血液腫瘤都搞定了':pct>=75?'👍 良好，再複習幾題':pct>=60?'📚 繼續加油！':'💪 多練習，你可以的';
+  document.getElementById('resCorrect').textContent=c;
+  document.getElementById('resWrong').textContent=Q.length-c;
+  document.getElementById('reviewList').innerHTML=log.map((l,i)=>{
+    const q2=Q[l.qi];
+    return '<div class="review-item '+(l.ok?'review-correct':'review-wrong')+'">'+
+      (l.ok?'✅ ':'❌ ')+'<b>Q'+(i+1)+'.</b> '+q2.q+'<br>'+
+      '<span class="ok">正解：'+K[q2.ans]+'. '+q2.opts[q2.ans]+'</span>'+
+      (!l.ok?'<br><span class="ng">你選：'+K[l.chosen]+'. '+q2.opts[l.chosen]+'</span>':'')+
+      '</div>';
+  }).join('');
+}
+
+function renderFC(){
+  const q=Q[fcOrder[fcIdx]];
+  document.getElementById('fcQ').textContent=q.q;
+  document.getElementById('fcAK').textContent=K[q.ans]+'.';
+  document.getElementById('fcAT').textContent=q.opts[q.ans];
+  document.getElementById('fcExp').textContent=q.exp;
+  document.getElementById('fcCounter').textContent=(fcIdx+1)+' / '+Q.length;
+  document.getElementById('fcCounter2').textContent=(fcIdx+1)+' / '+Q.length;
+  flipped=false;
+  document.getElementById('fcInner').classList.remove('flip');
+  fcSeen.add(fcIdx);
+  renderDots();
+}
+
+function renderDots(){
+  document.getElementById('fcDots').innerHTML=fcOrder.map((_,i)=>
+    '<div class="fc-dot '+(i===fcIdx?'cur':fcSeen.has(i)?'seen':'')+'" data-i="'+i+'"></div>'
+  ).join('');
+  document.querySelectorAll('.fc-dot').forEach(d=>{
+    d.addEventListener('click',e=>{
+      e.stopPropagation();
+      fcIdx=parseInt(d.dataset.i);
+      renderFC();
+    });
+  });
+}
+
+function flipCard(){
+  flipped=!flipped;
+  document.getElementById('fcInner').classList.toggle('flip',flipped);
+}
+
+function navFC(dir){
+  fcIdx=(fcIdx+dir+Q.length)%Q.length;
+  renderFC();
+}
+
+function shuffleFC(){
+  fcOrder=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+  fcIdx=0; fcSeen=new Set([0]);
+  renderFC();
+}
+
+renderFC();
+</script>
+</body>
+</html>

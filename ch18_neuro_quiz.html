@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>病理學第十八章｜神經系統疾病</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0d0f14;--card:#161921;--card2:#1e2230;--border:#2a3050;--red:#5fb4d4;--green:#3ecf8e;--gold:#f5a623;--blue:#4da6ff;--text:#e8ecf5;--muted:#8090b0}
+body{font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;line-height:1.6}
+header{background:linear-gradient(135deg,#0a1a2a 0%,#0d0f14 70%);border-bottom:1px solid var(--border);padding:20px 14px 16px;text-align:center}
+.eyebrow{font-family:monospace;font-size:10px;letter-spacing:.2em;color:var(--red);margin-bottom:4px}
+h1{font-size:clamp(1.2rem,5vw,1.7rem);font-weight:700}
+h1 span{color:var(--red)}
+.subtitle{font-size:11px;color:var(--muted);margin-top:3px}
+.tabs{display:flex;border-bottom:1px solid var(--border)}
+.tab{flex:1;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:13px;padding:11px 0;cursor:pointer;font-family:inherit}
+.tab.active{color:var(--red);border-bottom-color:var(--red)}
+main{padding:14px 12px;max-width:640px;margin:0 auto}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 14px;margin-bottom:12px}
+.title-red{font-size:.9rem;font-weight:700;color:var(--red);margin-bottom:8px}
+.muted{font-size:.83rem;color:var(--muted);line-height:1.85}
+.btn{background:var(--red);border:none;border-radius:8px;color:#0d0f14;font-family:inherit;font-size:.87rem;padding:10px 18px;cursor:pointer;font-weight:600}
+.btn.ghost{background:var(--card2);border:1px solid var(--border);color:var(--muted);font-weight:400}
+.btn:hover{opacity:.9}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.prog-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.prog-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:2px;transition:width .4s;width:0%}
+.prog-lbl{font-family:monospace;font-size:11px;color:var(--muted);white-space:nowrap}
+.qnum{font-family:monospace;font-size:10px;color:var(--red);letter-spacing:.15em;margin-bottom:8px}
+.qtext{font-size:.94rem;line-height:1.8;margin-bottom:14px;font-weight:500}
+.opt{display:flex;gap:10px;width:100%;text-align:left;padding:10px 12px;margin-bottom:7px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);cursor:pointer;font-size:.87rem;line-height:1.6;font-family:inherit;transition:all .15s}
+.opt:hover:not(:disabled){border-color:#3a7a99;background:rgba(95,180,212,0.08)}
+.opt:disabled{cursor:default}
+.opt-key{font-family:monospace;font-weight:700;color:var(--muted);flex-shrink:0;margin-top:1px}
+.opt.correct{background:#1a3a2a;border-color:var(--green)}
+.opt.correct .opt-key{color:var(--green)}
+.opt.wrong{background:#1a2a3a;border-color:var(--red)}
+.opt.wrong .opt-key{color:var(--red)}
+.expl{display:none;background:rgba(77,166,255,0.09);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:10px 12px;font-size:.82rem;line-height:1.8;color:#b0c4e8;margin-top:10px}
+.expl.show{display:block}
+.expl b{color:var(--blue)}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.score-live{font-family:monospace;font-size:11px;color:var(--muted)}
+.result-big{text-align:center;padding:22px 0 14px}
+.result-pct{font-size:3.8rem;font-weight:800;color:var(--gold);line-height:1}
+.result-grade{font-size:1rem;color:var(--muted);margin-top:5px}
+.score-stats{display:flex;justify-content:center;gap:28px;margin:16px 0;flex-wrap:wrap}
+.stat-num{font-size:2rem;font-weight:700}
+.stat-lbl{font-size:10px;color:var(--muted);letter-spacing:.1em}
+.review-head{font-family:monospace;font-size:10px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:6px;margin:20px 0 10px}
+.review-item{border-radius:8px;padding:10px 12px;margin-bottom:7px;font-size:.83rem;line-height:1.7}
+.review-correct{background:rgba(62,207,142,0.05);border:1px solid rgba(62,207,142,0.25)}
+.review-wrong{background:rgba(95,180,212,0.06);border:1px solid #3a7a99}
+.review-item .ok{color:var(--green);font-family:monospace;font-size:11px}
+.review-item .ng{color:var(--red);font-family:monospace;font-size:11px}
+.fc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.fc-counter{font-family:monospace;font-size:12px;color:var(--muted)}
+.fc-shuffle{background:var(--card2);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px;padding:5px 12px;cursor:pointer;font-family:inherit}
+.fc-wrap{perspective:900px;cursor:pointer;margin-bottom:12px}
+.fc-inner{position:relative;min-height:240px;transform-style:preserve-3d;transition:transform .55s}
+.fc-inner.flip{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:22px 18px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:240px}
+.fc-front{background:var(--card);border:1px solid var(--border)}
+.fc-back{background:var(--card2);border:1px solid #3a7a99;transform:rotateY(180deg)}
+.fc-badge{font-family:monospace;font-size:10px;letter-spacing:.2em;margin-bottom:12px}
+.fc-front .fc-badge{color:var(--red)}
+.fc-back .fc-badge{color:var(--green);margin-bottom:10px}
+.fc-q{font-size:.95rem;line-height:1.8}
+.fc-ak{font-family:monospace;font-size:1.9rem;font-weight:700;color:var(--green);margin-bottom:6px}
+.fc-at{font-size:.92rem;line-height:1.7;margin-bottom:10px}
+.fc-exp{font-size:.79rem;color:var(--muted);line-height:1.7;border-top:1px solid var(--border);padding-top:10px;max-width:460px}
+.fc-nav{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:14px}
+.fc-dots{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.fc-dot{width:9px;height:9px;border-radius:50%;background:var(--border);cursor:pointer;transition:background .2s}
+.fc-dot.seen{background:#3a4060}
+.fc-dot.cur{background:var(--red)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">解剖生理病理學 III · 期末考範圍</div>
+  <h1>第十八章 <span>神經</span>系統疾病</h1>
+  <div class="subtitle">15 題精選 · 選擇題 + 閃卡 + 詳解</div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-tab="quiz">📝 測驗模式</button>
+  <button class="tab" data-tab="flash">🃏 閃卡記憶</button>
+</div>
+
+<main>
+  <div id="panel-quiz" class="panel active">
+    <div id="home-view">
+      <div class="card">
+        <div class="title-red">🧠 本章重點題型</div>
+        <div class="muted">視網膜芽細胞瘤（two-hit）· 髓母細胞瘤 · 肌萎縮性側索硬化症（ALS）· 硬腦膜外/下血腫 · 杭汀頓氏病 · Creutzfeldt-Jakob disease（普利昂）· 帕金森氏症 · 進行性多灶性白質腦病（PML）· 自發性蛛網膜下腔出血 · 小腦天幕疝脫 · 病原體大小比較</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="startQuiz(false)">▶ 循序作答（15題）</button>
+        <button class="btn ghost" onclick="startQuiz(true)">🔀 隨機出題</button>
+      </div>
+    </div>
+
+    <div id="quiz-view" style="display:none">
+      <div class="prog-wrap">
+        <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+        <div class="prog-lbl" id="progLbl">1 / 15</div>
+      </div>
+      <div class="card" id="qCard"></div>
+      <div class="score-row">
+        <span class="score-live" id="scoreLive">✓ 0 &nbsp; ✗ 0</span>
+        <button class="btn" id="nextBtn" style="display:none" onclick="nextQ()">下一題 →</button>
+      </div>
+    </div>
+
+    <div id="result-view" style="display:none">
+      <div class="result-big">
+        <div class="result-pct" id="resultPct">0%</div>
+        <div class="result-grade" id="resultGrade"></div>
+        <div class="score-stats">
+          <div><div class="stat-num" style="color:var(--green)" id="resCorrect">0</div><div class="stat-lbl">答對</div></div>
+          <div><div class="stat-num" style="color:var(--red)" id="resWrong">0</div><div class="stat-lbl">答錯</div></div>
+          <div><div class="stat-num" style="color:var(--muted)" id="resTotal">15</div><div class="stat-lbl">總題</div></div>
+        </div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn" onclick="startQuiz(false)">重新練習</button>
+          <button class="btn ghost" onclick="startQuiz(true)">🔀 隨機再測</button>
+        </div>
+      </div>
+      <div class="review-head">全部答題回顧</div>
+      <div id="reviewList"></div>
+    </div>
+  </div>
+
+  <div id="panel-flash" class="panel">
+    <div class="fc-head">
+      <span class="fc-counter" id="fcCounter">1 / 15</span>
+      <button class="fc-shuffle" onclick="shuffleFC()">🔀 隨機</button>
+    </div>
+    <div class="fc-wrap" onclick="flipCard()">
+      <div class="fc-inner" id="fcInner">
+        <div class="fc-face fc-front">
+          <div class="fc-badge">🧠 題目 · 點擊翻面查看答案</div>
+          <div class="fc-q" id="fcQ"></div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-badge">✓ 答案</div>
+          <div class="fc-ak" id="fcAK"></div>
+          <div class="fc-at" id="fcAT"></div>
+          <div class="fc-exp" id="fcExp"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn ghost" onclick="navFC(-1)">← 上一張</button>
+      <span class="fc-counter" id="fcCounter2">1 / 15</span>
+      <button class="btn ghost" onclick="navFC(1)">下一張 →</button>
+    </div>
+    <div class="fc-dots" id="fcDots"></div>
+  </div>
+</main>
+
+<script>
+const Q=[
+{q:"下列何種腫瘤之發生最符合基因雙重打擊理論（two-hit hypothesis）？",opts:["大腸癌","視網膜芽細胞瘤（retinoblastoma）","乳癌","肝癌"],ans:1,exp:"Knudson two-hit hypothesis原來就是基於Retinoblastoma所提出。①家族性：第一個Rb基因突變遺傳自父母，第二個體細胞突變→年幼即雙側發病 ②散發性：兩個Rb基因皆為體細胞突變→年長單側發病。Rb是腫瘤抑制基因（13q14），控制G1→S細胞週期關卡。"},
+{q:"有關髓芽母細胞瘤（medulloblastoma）的敘述，下列何者錯誤？",opts:["好發於老年人","好發於小腦","顯微鏡下，侯瑪盧愛氏玫瑰花形（Homer Wright rosette）是其特徵","可隨腦脊髓液散播"],ans:0,exp:"Medulloblastoma好發於「兒童」（不是老年人！），是兒童最常見的惡性腦腫瘤。位於小腦蚓部，造成共濟失調、頭痛、嘔吐（顱內高壓）。組織學特徵：Homer Wright rosette（無中央管腔）、小藍圓細胞。可經腦脊液散播（drop metastasis）。"},
+{q:"下列哪一個中樞神經系統部位是肌萎縮性側索硬化症（ALS）的主要病變區？",opts:["脊髓","小腦","大腦枕葉區","大腦顳葉區"],ans:0,exp:"ALS（漸凍人/Lou Gehrig disease）侵犯「上、下運動神經元」：①下運動神經元（脊髓前角細胞）→肌肉萎縮、束顫、無力 ②上運動神經元（皮質脊髓徑）→痙攣、反射亢進。感覺、認知、眼球運動「未受影響」。預後極差，平均存活3-5年。"},
+{q:"下列哪條血管與硬腦膜外血腫（epidural hematoma）關聯性最大？",opts:["上矢狀靜脈","中腦膜動脈（middle meningeal artery）","腦膜橋靜脈（bridging vein）","前大腦動脈"],ans:1,exp:"Epidural hematoma：頭部外傷（顳骨骨折）撕裂「中腦膜動脈（MMA）」→動脈血迅速堆積於硬腦膜與顱骨之間。CT特徵：凸透鏡狀（lens-shaped/biconvex）。臨床：lucid interval（短暫意識清醒期）後迅速惡化。Subdural hematoma則因bridging vein撕裂，新月形（crescent-shaped）。"},
+{q:"有關杭汀頓氏病（Huntington disease）的敘述，下列何者錯誤？",opts:["是一種舞蹈症（chorea）","是一種體染色體顯性遺傳疾病","通常在兒童期發病","與大腦尾核（caudate nucleus）及殼腦（putamen）內的神經元持續退化有關"],ans:2,exp:"Huntington disease通常「中年發病」（30-50歲）（不是兒童期！）。體染色體顯性，HTT基因CAG重複擴增（>40）。臨床三聯徵：舞蹈症（chorea）+認知退化+精神症狀。病理：尾核+殼腦萎縮（caudate atrophy）→腦室擴大。Anticipation現象：下一代發病更早更嚴重。"},
+{q:"5歲小男孩出現腦壓增加、步履不穩，腦部CT發現小腦中間有迅速生長的腫瘤。下列何者是最可能的診斷？",opts:["髓芽母細胞瘤（medulloblastoma）","室管膜瘤","星狀細胞瘤","寡突膠細胞瘤"],ans:0,exp:"5歲兒童+小腦中線（蚓部）腫瘤+生長快→Medulloblastoma！是兒童最常見惡性腦腫瘤。臨床：共濟失調、頭痛、晨吐（顱內高壓）。組織學：Homer Wright rosette、小藍圓細胞。可隨腦脊液drop metastasis至脊髓。"},
+{q:"下列何種腦瘤最常見於小於5歲兒童的小腦？",opts:["寡突細胞瘤","室管細胞瘤","髓母細胞瘤（medulloblastoma）","腦膜瘤"],ans:2,exp:"幼兒小腦腫瘤：Medulloblastoma最常見（惡性，蚓部）。其他兒童腦腫瘤好發部位：①Pilocytic astrocytoma：小腦/視神經（良性，預後最好）②Ependymoma：第四腦室 ③Brainstem glioma。成人則以幕上腫瘤為主（如膠質母細胞瘤、腦膜瘤）。"},
+{q:"Creutzfeldt-Jakob病會造成大腦皮質及深部灰質的海綿狀變形，這種病的病因主要與下列何者有關？",opts:["病毒感染","細菌感染","原蟲感染","Prion蛋白變異（普利昂蛋白）"],ans:3,exp:"CJD（庫賈氏病）由「Prion（普利昂蛋白）」引起，正常PrP^c錯誤折疊為致病性PrP^sc，誘導其他正常蛋白也錯誤折疊。病理：大腦海綿狀變化（spongiform change）、神經元喪失、無發炎反應。臨床：快速進行性失智+肌陣攣（myoclonus）+周期性EEG。狂牛病（vCJD）也是prion。"},
+{q:"下列關於帕金森氏症（Parkinson disease）的敘述何者錯誤？",opts:["臨床上會造成減慢性動作失調","黑質區產生dopamin的神經元會減少","殘存的神經元可能發現Lewy bodies","長期下來會出現含有amyloid的neuritic plaques及含有過度磷酸化tau蛋白的neurofibrillary tangles"],ans:3,exp:"含amyloid的neuritic plaques + 過度磷酸化tau的neurofibrillary tangles是「阿茲海默症（Alzheimer disease）」的特徵（不是帕金森！）。Parkinson disease病理特徵：①黑質（substantia nigra）多巴胺神經元喪失 ②Lewy body（含α-synuclein）③臨床：靜止性顫抖、僵直、運動遲緩、姿勢不穩定。"},
+{q:"進行性多灶性白質腦病（PML）是一種髓鞘脫失的病變，臨床上常與免疫抑制有關。此病主要由何種病毒引起？",opts:["HSV-1","VZV","EBV","JC virus"],ans:3,exp:"PML由「JC virus（多瘤病毒）」引起，常見於AIDS、移植患者、使用免疫抑制劑（如natalizumab）者。病毒攻擊寡突膠細胞→脫髓鞘斑塊→局部神經症狀。MRI：白質多發病灶。預後極差。"},
+{q:"下列何者最常引起「自發性蛛網膜下腔出血」（SAH）？",opts:["動脈瘤破裂","巨細胞病毒（CMV）感染","中腦膜動脈破裂","中腦動脈阻塞"],ans:0,exp:"自發性SAH最常見原因（75-80%）：「漿果型動脈瘤（berry aneurysm）破裂」，好發威利氏環（特別是前交通動脈）。次要原因：AVM、外傷。臨床：突發「一生中最劇烈的頭痛」（thunderclap headache）、頸僵直、畏光、噁心。CT：腦溝裂中高密度。中腦膜動脈破裂→硬腦膜外血腫（不是SAH）。"},
+{q:"甲狀腺乳突癌（papillary carcinoma），下列何者最少見？",opts:["BRAF基因突變","TP53基因突變","毛玻璃樣細胞核（ground-glass nuclei）","細胞核內假包涵物"],ans:1,exp:"Papillary thyroid carcinoma最常見基因突變是「BRAF V600E」（約45%），不是TP53。TP53突變反而是「未分化型甲狀腺癌（anaplastic carcinoma）」特徵，預後極差。Papillary其他細胞核特徵：核溝、Orphan Annie eye、核內偽包涵體、Psammoma body。"},
+{q:"小腦天幕疝脫（transtentorial herniation），顳葉內側緣被擠壓時，下列何種變化最少見？",opts:["腦壓上升","腦萎縮","瞳孔放大","視覺皮質缺血"],ans:1,exp:"小腦天幕疝脫（uncal herniation）：顳葉內側（uncus）擠壓中腦及第三對腦神經（動眼神經）→「瞳孔散大固定」（同側）+對側肢體無力。後大腦動脈受壓→「枕葉視覺皮質缺血」。腦壓本身就因疝脫升高。腦萎縮屬慢性病變，與急性疝脫無關。"},
+{q:"庫賈氏病（Creutzfeldt-Jakob disease, CJD）最典型的病理變化為下列何者？",opts:["脫髓鞘斑塊","腦膿瘍","中腦黑質退化","大腦海綿狀轉化（spongiform transformation）"],ans:3,exp:"CJD病理特徵：①大腦皮質+深部灰質「海綿狀變化」（spongiform）②神經元喪失 ③澱粉樣斑塊（kuru plaques）④「無發炎反應」（這是Prion病特色）。臨床三聯徵：快速失智+肌陣攣+周期性EEG。確診需腦組織切片。脫髓鞘→MS、PML；黑質退化→Parkinson。"},
+{q:"下列哪一種人類病原體的大小（size）最小？",opts:["黴菌（fungi）","普利昂蛋白（prion）","細菌（bacteria）","原生動物（protozoa）"],ans:1,exp:"病原體大小：Prion（普利昂蛋白，僅蛋白質）< Viruses（病毒）< Bacteria（細菌）< Fungi（黴菌）< Protozoa（原生動物）。Prion是最小的致病原，本質為錯誤折疊的蛋白質，無核酸，極度抗熱抗化學處理。引起CJD、kuru、狂牛病、致命家族性失眠症（FFI）等。"}
+];
+const K=["A","B","C","D"];
+
+let order=[],idx=0,chosen=null,log=[];
+let fcOrder=Q.map((_,i)=>i),fcIdx=0,flipped=false,fcSeen=new Set([0]);
+
+document.getElementById('resTotal').textContent=Q.length;
+
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+    if(t.dataset.tab==='flash') renderFC();
+  });
+});
+
+function startQuiz(shuffle){
+  order=Q.map((_,i)=>i);
+  if(shuffle) order.sort(()=>Math.random()-.5);
+  idx=0; chosen=null; log=[];
+  document.getElementById('home-view').style.display='none';
+  document.getElementById('result-view').style.display='none';
+  document.getElementById('quiz-view').style.display='block';
+  renderQ();
+}
+
+function renderQ(){
+  const q=Q[order[idx]];
+  document.getElementById('progFill').style.width=((idx/Q.length)*100)+'%';
+  document.getElementById('progLbl').textContent=(idx+1)+' / '+Q.length;
+  document.getElementById('qCard').innerHTML=
+    '<div class="qnum">Q '+(idx+1)+'</div>'+
+    '<div class="qtext">'+q.q+'</div>'+
+    '<div id="opts">'+q.opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="opt-key">'+K[i]+'.</span><span>'+o+'</span></button>').join('')+'</div>'+
+    '<div class="expl" id="expl"><b>📋 解析：</b>'+q.exp+'</div>';
+  document.querySelectorAll('.opt').forEach(b=>{
+    b.addEventListener('click',()=>pickOpt(parseInt(b.dataset.i)));
+  });
+  document.getElementById('nextBtn').style.display='none';
+  updateScoreLive();
+}
+
+function pickOpt(i){
+  if(chosen!==null) return;
+  const q=Q[order[idx]];
+  chosen=i;
+  const btns=document.querySelectorAll('.opt');
+  btns.forEach(b=>b.disabled=true);
+  btns[i].classList.add(i===q.ans?'correct':'wrong');
+  if(i!==q.ans) btns[q.ans].classList.add('correct');
+  document.getElementById('expl').classList.add('show');
+  log.push({qi:order[idx],chosen:i,ok:i===q.ans});
+  updateScoreLive();
+  const nb=document.getElementById('nextBtn');
+  nb.style.display='inline-block';
+  nb.textContent=idx+1<Q.length?'下一題 →':'查看成績 🎯';
+}
+
+function updateScoreLive(){
+  const c=log.filter(l=>l.ok).length, w=log.filter(l=>!l.ok).length;
+  document.getElementById('scoreLive').innerHTML='✓ '+c+' &nbsp; ✗ '+w;
+}
+
+function nextQ(){
+  if(idx+1>=Q.length){ showResult(); return; }
+  idx++; chosen=null;
+  renderQ();
+}
+
+function showResult(){
+  document.getElementById('quiz-view').style.display='none';
+  document.getElementById('result-view').style.display='block';
+  const c=log.filter(l=>l.ok).length;
+  const pct=Math.round(c/Q.length*100);
+  document.getElementById('resultPct').textContent=pct+'%';
+  document.getElementById('resultGrade').textContent=
+    pct>=90?'🏆 優秀！神經病理沒問題':pct>=75?'👍 良好，再複習幾題':pct>=60?'📚 繼續加油！':'💪 多練習，你可以的';
+  document.getElementById('resCorrect').textContent=c;
+  document.getElementById('resWrong').textContent=Q.length-c;
+  document.getElementById('reviewList').innerHTML=log.map((l,i)=>{
+    const q2=Q[l.qi];
+    return '<div class="review-item '+(l.ok?'review-correct':'review-wrong')+'">'+
+      (l.ok?'✅ ':'❌ ')+'<b>Q'+(i+1)+'.</b> '+q2.q+'<br>'+
+      '<span class="ok">正解：'+K[q2.ans]+'. '+q2.opts[q2.ans]+'</span>'+
+      (!l.ok?'<br><span class="ng">你選：'+K[l.chosen]+'. '+q2.opts[l.chosen]+'</span>':'')+
+      '</div>';
+  }).join('');
+}
+
+function renderFC(){
+  const q=Q[fcOrder[fcIdx]];
+  document.getElementById('fcQ').textContent=q.q;
+  document.getElementById('fcAK').textContent=K[q.ans]+'.';
+  document.getElementById('fcAT').textContent=q.opts[q.ans];
+  document.getElementById('fcExp').textContent=q.exp;
+  document.getElementById('fcCounter').textContent=(fcIdx+1)+' / '+Q.length;
+  document.getElementById('fcCounter2').textContent=(fcIdx+1)+' / '+Q.length;
+  flipped=false;
+  document.getElementById('fcInner').classList.remove('flip');
+  fcSeen.add(fcIdx);
+  renderDots();
+}
+
+function renderDots(){
+  document.getElementById('fcDots').innerHTML=fcOrder.map((_,i)=>
+    '<div class="fc-dot '+(i===fcIdx?'cur':fcSeen.has(i)?'seen':'')+'" data-i="'+i+'"></div>'
+  ).join('');
+  document.querySelectorAll('.fc-dot').forEach(d=>{
+    d.addEventListener('click',e=>{
+      e.stopPropagation();
+      fcIdx=parseInt(d.dataset.i);
+      renderFC();
+    });
+  });
+}
+
+function flipCard(){
+  flipped=!flipped;
+  document.getElementById('fcInner').classList.toggle('flip',flipped);
+}
+
+function navFC(dir){
+  fcIdx=(fcIdx+dir+Q.length)%Q.length;
+  renderFC();
+}
+
+function shuffleFC(){
+  fcOrder=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+  fcIdx=0; fcSeen=new Set([0]);
+  renderFC();
+}
+
+renderFC();
+</script>
+</body>
+</html>
