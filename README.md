@@ -2,13 +2,13 @@
 
 > 仁德醫專 五專護理科 · 解剖生理病理學 III · 第 10–19 章期末考完整題庫
 
-[![Pages](https://img.shields.io/badge/GitHub-Pages-success)](https://htlin222.github.io/pathology-quiz/)
+[![Pages](https://img.shields.io/badge/GitHub-Pages-success)](https://tsn4830-ui.github.io/pathology-quiz/)
 [![Chapters](https://img.shields.io/badge/章節-10-blue)]()
 [![Questions](https://img.shields.io/badge/題目-328-orange)]()
 
 ## 🎯 線上使用
 
-👉 **直接點這裡開始複習**：[https://htlin222.github.io/pathology-quiz/](https://htlin222.github.io/pathology-quiz/)
+👉 **直接點這裡開始複習**：[https://tsn4830-ui.github.io/pathology-quiz/](https://tsn4830-ui.github.io/pathology-quiz/)
 
 支援手機、平板、電腦瀏覽器，無需安裝。
 
