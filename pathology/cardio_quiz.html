@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>病理學第十章｜心臟血管系統疾病</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0d0f14;--card:#161921;--card2:#1e2230;--border:#2a3050;--red:#e84a5f;--green:#3ecf8e;--gold:#f5a623;--blue:#4da6ff;--text:#e8ecf5;--muted:#8090b0}
+body{font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;line-height:1.6}
+header{background:linear-gradient(135deg,#1a0810 0%,#0d0f14 70%);border-bottom:1px solid var(--border);padding:20px 14px 16px;text-align:center}
+.eyebrow{font-family:monospace;font-size:10px;letter-spacing:.2em;color:var(--red);margin-bottom:4px}
+h1{font-size:clamp(1.2rem,5vw,1.7rem);font-weight:700}
+h1 span{color:var(--red)}
+.subtitle{font-size:11px;color:var(--muted);margin-top:3px}
+.tabs{display:flex;border-bottom:1px solid var(--border)}
+.tab{flex:1;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:13px;padding:11px 0;cursor:pointer;font-family:inherit}
+.tab.active{color:var(--red);border-bottom-color:var(--red)}
+main{padding:14px 12px;max-width:640px;margin:0 auto}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 14px;margin-bottom:12px}
+.title-red{font-size:.9rem;font-weight:700;color:var(--red);margin-bottom:8px}
+.muted{font-size:.83rem;color:var(--muted);line-height:1.85}
+.btn{background:var(--red);border:none;border-radius:8px;color:#fff;font-family:inherit;font-size:.87rem;padding:10px 18px;cursor:pointer}
+.btn.ghost{background:var(--card2);border:1px solid var(--border);color:var(--muted)}
+.btn:hover{opacity:.9}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.prog-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.prog-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:2px;transition:width .4s;width:0%}
+.prog-lbl{font-family:monospace;font-size:11px;color:var(--muted);white-space:nowrap}
+.qnum{font-family:monospace;font-size:10px;color:var(--red);letter-spacing:.15em;margin-bottom:8px}
+.qtext{font-size:.94rem;line-height:1.8;margin-bottom:14px;font-weight:500}
+.opt{display:flex;gap:10px;width:100%;text-align:left;padding:10px 12px;margin-bottom:7px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);cursor:pointer;font-size:.87rem;line-height:1.6;font-family:inherit;transition:all .15s}
+.opt:hover:not(:disabled){border-color:#a83348;background:rgba(232,74,95,0.08)}
+.opt:disabled{cursor:default}
+.opt-key{font-family:monospace;font-weight:700;color:var(--muted);flex-shrink:0;margin-top:1px}
+.opt.correct{background:#1a3a2a;border-color:var(--green)}
+.opt.correct .opt-key{color:var(--green)}
+.opt.wrong{background:#3a1a1a;border-color:var(--red)}
+.opt.wrong .opt-key{color:var(--red)}
+.expl{display:none;background:rgba(77,166,255,0.09);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:10px 12px;font-size:.82rem;line-height:1.8;color:#b0c4e8;margin-top:10px}
+.expl.show{display:block}
+.expl b{color:var(--blue)}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.score-live{font-family:monospace;font-size:11px;color:var(--muted)}
+.result-big{text-align:center;padding:22px 0 14px}
+.result-pct{font-size:3.8rem;font-weight:800;color:var(--gold);line-height:1}
+.result-grade{font-size:1rem;color:var(--muted);margin-top:5px}
+.score-stats{display:flex;justify-content:center;gap:28px;margin:16px 0;flex-wrap:wrap}
+.stat-num{font-size:2rem;font-weight:700}
+.stat-lbl{font-size:10px;color:var(--muted);letter-spacing:.1em}
+.review-head{font-family:monospace;font-size:10px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:6px;margin:20px 0 10px}
+.review-item{border-radius:8px;padding:10px 12px;margin-bottom:7px;font-size:.83rem;line-height:1.7}
+.review-correct{background:rgba(62,207,142,0.05);border:1px solid rgba(62,207,142,0.25)}
+.review-wrong{background:rgba(232,74,95,0.06);border:1px solid #a83348}
+.review-item .ok{color:var(--green);font-family:monospace;font-size:11px}
+.review-item .ng{color:var(--red);font-family:monospace;font-size:11px}
+.fc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.fc-counter{font-family:monospace;font-size:12px;color:var(--muted)}
+.fc-shuffle{background:var(--card2);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px;padding:5px 12px;cursor:pointer;font-family:inherit}
+.fc-wrap{perspective:900px;cursor:pointer;margin-bottom:12px}
+.fc-inner{position:relative;min-height:240px;transform-style:preserve-3d;transition:transform .55s}
+.fc-inner.flip{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:22px 18px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:240px}
+.fc-front{background:var(--card);border:1px solid var(--border)}
+.fc-back{background:var(--card2);border:1px solid #a83348;transform:rotateY(180deg)}
+.fc-badge{font-family:monospace;font-size:10px;letter-spacing:.2em;margin-bottom:12px}
+.fc-front .fc-badge{color:var(--red)}
+.fc-back .fc-badge{color:var(--green);margin-bottom:10px}
+.fc-q{font-size:.95rem;line-height:1.8}
+.fc-ak{font-family:monospace;font-size:1.9rem;font-weight:700;color:var(--green);margin-bottom:6px}
+.fc-at{font-size:.92rem;line-height:1.7;margin-bottom:10px}
+.fc-exp{font-size:.79rem;color:var(--muted);line-height:1.7;border-top:1px solid var(--border);padding-top:10px;max-width:460px}
+.fc-nav{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:14px}
+.fc-dots{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.fc-dot{width:9px;height:9px;border-radius:50%;background:var(--border);cursor:pointer;transition:background .2s}
+.fc-dot.seen{background:#3a4060}
+.fc-dot.cur{background:var(--red)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">解剖生理病理學 III · 科考範圍</div>
+  <h1>第十章 <span>心臟血管</span>系統疾病</h1>
+  <div class="subtitle">35 題精選 · 選擇題 + 閃卡 + 詳解</div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-tab="quiz">📝 測驗模式</button>
+  <button class="tab" data-tab="flash">🃏 閃卡記憶</button>
+</div>
+
+<main>
+  <div id="panel-quiz" class="panel active">
+    <div id="home-view">
+      <div class="card">
+        <div class="title-red">📋 本章重點題型</div>
+        <div class="muted">動脈瘤類型 · 高血壓分類 · 心衰竭機制 · 感染性心內膜炎 · 心肌梗塞病理時序 · 先天性心臟病 · 法洛氏四重症 · 風溼熱/Aschoff小體 · 各種血管炎 · 川崎氏病</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="startQuiz(false)">▶ 循序作答（35題）</button>
+        <button class="btn ghost" onclick="startQuiz(true)">🔀 隨機出題</button>
+      </div>
+    </div>
+
+    <div id="quiz-view" style="display:none">
+      <div class="prog-wrap">
+        <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+        <div class="prog-lbl" id="progLbl">1 / 35</div>
+      </div>
+      <div class="card" id="qCard"></div>
+      <div class="score-row">
+        <span class="score-live" id="scoreLive">✓ 0 &nbsp; ✗ 0</span>
+        <button class="btn" id="nextBtn" style="display:none" onclick="nextQ()">下一題 →</button>
+      </div>
+    </div>
+
+    <div id="result-view" style="display:none">
+      <div class="result-big">
+        <div class="result-pct" id="resultPct">0%</div>
+        <div class="result-grade" id="resultGrade"></div>
+        <div class="score-stats">
+          <div><div class="stat-num" style="color:var(--green)" id="resCorrect">0</div><div class="stat-lbl">答對</div></div>
+          <div><div class="stat-num" style="color:var(--red)" id="resWrong">0</div><div class="stat-lbl">答錯</div></div>
+          <div><div class="stat-num" style="color:var(--muted)">35</div><div class="stat-lbl">總題</div></div>
+        </div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn" onclick="startQuiz(false)">重新練習</button>
+          <button class="btn ghost" onclick="startQuiz(true)">🔀 隨機再測</button>
+        </div>
+      </div>
+      <div class="review-head">全部答題回顧</div>
+      <div id="reviewList"></div>
+    </div>
+  </div>
+
+  <div id="panel-flash" class="panel">
+    <div class="fc-head">
+      <span class="fc-counter" id="fcCounter">1 / 35</span>
+      <button class="fc-shuffle" onclick="shuffleFC()">🔀 隨機</button>
+    </div>
+    <div class="fc-wrap" onclick="flipCard()">
+      <div class="fc-inner" id="fcInner">
+        <div class="fc-face fc-front">
+          <div class="fc-badge">♥ 題目 · 點擊翻面查看答案</div>
+          <div class="fc-q" id="fcQ"></div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-badge">✓ 答案</div>
+          <div class="fc-ak" id="fcAK"></div>
+          <div class="fc-at" id="fcAT"></div>
+          <div class="fc-exp" id="fcExp"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn ghost" onclick="navFC(-1)">← 上一張</button>
+      <span class="fc-counter" id="fcCounter2">1 / 35</span>
+      <button class="btn ghost" onclick="navFC(1)">下一張 →</button>
+    </div>
+    <div class="fc-dots" id="fcDots"></div>
+  </div>
+</main>
+
+<script>
+const Q=[
+{q:"腦部血管最常見之動脈瘤？",opts:["漿果狀動脈瘤（berry aneurysm）","梭狀動脈瘤（fusiform）","囊狀動脈瘤（cystic）","夾層性動脈瘤（dissecting）"],ans:0,exp:"腦部最常見為漿果狀動脈瘤，好發於威利氏環分叉處（前交通動脈最多），為先天性中膜缺損所致，破裂→蛛網膜下腔出血。"},
+{q:"高血壓最常見的類型？",opts:["腎臟病","腎上腺疾病","主動脈狹窄","原發性（本態性）高血壓"],ans:3,exp:"約95%為原發性高血壓，無明確單一病因，與遺傳、飲食、生活型態相關。繼發性高血壓僅佔5%。"},
+{q:"可引起高輸出量心衰竭的原因？",opts:["慢性貧血","黏液瘤","心肌病","肺水腫"],ans:0,exp:"高輸出量心衰竭：心輸出量正常或偏高仍不足需求。原因：慢性貧血、甲亢、動靜脈廔管。心臟因代償性加速最終衰竭。"},
+{q:"下列何者較易發生感染性心內膜炎？",opts:["靜脈注射毒品者","健康成年男性","懷孕女性","肺動脈高壓患者"],ans:0,exp:"靜脈注射毒品者是感染性心內膜炎高危族群（金黃色葡萄球菌最常見），常侵犯三尖瓣。"},
+{q:"血管粥樣腫（atheroma）中最常見的發炎細胞？",opts:["嗜酸性白血球","嗜鹼性白血球","漿細胞","巨噬細胞（泡沫細胞）"],ans:3,exp:"巨噬細胞吞噬氧化LDL後成為泡沫細胞（foam cell），是粥狀瘤核心成分。"},
+{q:"左心室衰竭最先引起哪個器官水腫？",opts:["肺","腎","胃","腸"],ans:0,exp:"左心衰→肺靜脈壓↑→肺微血管靜水壓增加→液體滲出→肺水腫。慢性者見心臟衰竭細胞（含鐵血黃素的巨噬細胞）。"},
+{q:"心肌炎最常見的原因？",opts:["酒精","抽菸","過敏反應","病毒感染"],ans:3,exp:"病毒性心肌炎最常見，主要為柯薩奇病毒B（Coxsackievirus B）、腺病毒等。Chagas病（克氏錐蟲）是南美洲非病毒性心肌炎重要原因。"},
+{q:"肝臟鬱血與何種器官功能不佳最有關係？",opts:["腦","心","胃","腎"],ans:1,exp:"右心衰竭→中心靜脈壓↑→肝靜脈回流受阻→肝臟慢性被動充血，嚴重時呈「荳蔻肝（nutmeg liver）」外觀。"},
+{q:"顱內先天性動脈瘤機率最高的位置？",opts:["威利氏環前交通動脈","內頸動脈入威利氏環處","威利氏環後交通動脈","基底動脈"],ans:0,exp:"顱內漿果狀動脈瘤最好發：前交通動脈（約30-35%）> 內頸/後交通動脈交接 > 大腦中動脈分叉。"},
+{q:"心肌梗塞最常見的併發症？",opts:["心律不整","心臟破裂","心衰竭","栓塞"],ans:0,exp:"心律不整是AMI最常見且急性期主要死亡原因（心室顫動）。心臟破裂高峰為梗塞後3-7天。"},
+{q:"心肌梗塞初期最常看到哪種發炎細胞浸潤？",opts:["嗜中性白血球","嗜酸性白血球","淋巴球","漿細胞"],ans:0,exp:"AMI時序：0-4h無變化→12-24h凝固性壞死＋嗜中性球→3-7天巨噬細胞清除→1-2週肉芽組織→2-8週纖維化。"},
+{q:"常規體檢最常發現哪種心瓣膜異常？",opts:["僧帽瓣鈣化","僧帽瓣脫垂（MVP）","主動脈瓣狹窄","主動脈瓣閉鎖不全"],ans:1,exp:"僧帽瓣脫垂是最常見心瓣膜異常，患病率約2-3%，中年女性多見，聽診有收縮期喀喇音（systolic click）。"},
+{q:"嬰兒最常見的先天性心臟病？",opts:["心房中隔缺損（ASD）","心室中隔缺損（VSD）","房室中隔缺損","法洛氏四重症"],ans:1,exp:"VSD佔先天性心臟病約25-30%，是最常見類型。大型VSD長期可致肺高壓（Eisenmenger症候群）。"},
+{q:"法洛氏四重症的病理變化，何者錯誤？",opts:["心室中隔缺損","主動脈跨騎在VSD之上","左心室出口阻塞","右心室肥大"],ans:2,exp:"法洛氏四重症：①VSD ②肺動脈狹窄（右心室出口阻塞，非左心室！）③主動脈跨騎 ④右心室肥大。右→左分流→發紺。"},
+{q:"心肌梗塞約在多久後產生明顯纖維化？",opts:["3～6天","7～9天","10～12天","2～8週"],ans:3,exp:"AMI纖維化時程：梗塞後2-8週形成穩定膠原纖維疤痕，無收縮功能，可能形成室壁瘤（ventricular aneurysm）。"},
+{q:"阿索夫氏小體（Aschoff body）是何種心臟疾病的特徵？",opts:["心肌梗塞","病毒性心肌炎","風溼熱","黏液瘤"],ans:2,exp:"Aschoff小體是風溼熱的病理特徵：中央纖維樣壞死＋Aschoff巨細胞＋Anitschkow毛蟲細胞。由A群鏈球菌感染後免疫反應引起。"},
+{q:"肛門痔瘡的病理機轉與下列哪個情況不同？",opts:["肝硬化食道靜脈曲張","幼兒頸部囊性水瘤（cystic hygroma）","懷孕婦女小腿靜脈曲張","久站者腿部靜脈曲張"],ans:1,exp:"囊性水瘤是淋巴管異常擴張（淋巴管瘤），屬先天性淋巴系統畸形。其他三者皆為靜脈高壓所致靜脈曲張，機制相同。"},
+{q:"好發於威利氏環的動脈瘤形態？",opts:["囊狀動脈瘤","漿果型動脈瘤（berry）","蜿蜒狀動脈瘤","分割性動脈瘤（dissecting）"],ans:1,exp:"漿果型動脈瘤因中膜缺損好發動脈分叉處，外觀如漿果。破裂→SAH，典型症狀「雷擊般劇烈頭痛」。"},
+{q:"下列何者不是痔瘡的常見原因？",opts:["動脈粥狀硬化","肝硬化","長期便祕","懷孕"],ans:0,exp:"動脈粥狀硬化是動脈疾病，與靜脈回流無關。痔瘡成因：門靜脈壓升高（肝硬化）、腹壓增加（便祕、懷孕）、久站久坐。"},
+{q:"最不可能引起左心衰竭的原因？",opts:["主動脈瓣功能不全","二尖瓣功能不全","缺血性心臟病","肺動脈狹窄"],ans:3,exp:"肺動脈狹窄→右心室後負荷增加→右心衰竭。左心衰竭原因：缺血性心臟病、高血壓、主動脈瓣/二尖瓣病變等。"},
+{q:"哪個心臟腔室發生原發性腫瘤（黏液瘤）機率最高？",opts:["左心房","左心室","右心房","右心室"],ans:0,exp:"心臟最常見原發性腫瘤為黏液瘤（myxoma），75%發生於左心房（卵圓窩附近），可造成瓣膜阻塞和栓塞。"},
+{q:"Buerger disease（伯格氏病）最常侵犯何處血管？",opts:["腦","腳（下肢中小血管）","腎","脾"],ans:1,exp:"Buerger病與重度吸菸強烈相關，好發年輕男性，主要侵犯下肢中小型動靜脈，導致缺血、疼痛、壞疽。戒菸最重要。"},
+{q:"化膿性肉芽腫顯微變化與何者相似？",opts:["微血管性血管瘤","囊性水瘤","血管球瘤","蜘蛛網血管擴張症"],ans:0,exp:"化膿性肉芽腫雖名含「膿」，實為大量微血管增生的反應性血管瘤，好發皮膚及口腔黏膜，常因外傷引起。"},
+{q:"下列何者不屬於急性風溼熱Jones氏主要標準？",opts:["心臟炎（carditis）","邊緣性紅班（erythema marginatum）","白血球增多（leukocytosis）","多關節炎（polyarthritis）"],ans:2,exp:"Jones主要標準5項：多關節炎、心臟炎、舞蹈症（Sydenham's）、皮下結節、邊緣性紅班。白血球增多屬次要標準。"},
+{q:"兒童後天性心臟病最常見者？",opts:["川崎氏病（Kawasaki disease）","心肌梗塞","高血壓心臟病","細菌性心內膜炎"],ans:0,exp:"川崎氏病是兒童最常見後天性心臟病，冠狀動脈瘤為最嚴重心臟併發症，好發5歲以下，病因與免疫異常相關。"},
+{q:"粥狀硬化引起的動脈瘤最常發生於？",opts:["頸部","胸部","腹部（腹主動脈）","大腿"],ans:2,exp:"粥狀硬化性動脈瘤最好發於腹主動脈（腎動脈以下），呈梭狀擴張。>5.5cm破裂風險高需手術。梅毒性動脈瘤好發胸主動脈。"},
+{q:"慢性肉芽腫限制性心包炎最常見病原？",opts:["梅毒","結核菌（M. tuberculosis）","金黃色葡萄球菌","大腸桿菌"],ans:1,exp:"結核性心包炎→慢性肉芽腫→心包增厚鈣化→縮窄性心包炎，妨礙心臟舒張期充填，導致右心衰竭症狀。"},
+{q:"最常引起心肌炎的原因？",opts:["病毒","黴菌","披衣菌","立克次體"],ans:0,exp:"病毒是心肌炎最常見原因，柯薩奇病毒B3型（Coxsackievirus B3）最重要，其他含腺病毒、流感病毒、HIV等。"},
+{q:"下列何者不是動脈粥狀硬化的高危險因子？",opts:["高血脂","高血壓","抽菸","嚼檳榔"],ans:3,exp:"動脈粥狀硬化危險因子：高血脂、高血壓、抽菸、糖尿病、肥胖、家族史。嚼檳榔主要與口腔癌相關。"},
+{q:"最常引起自發性蛛網膜下腔出血（SAH）？",opts:["動脈瘤破裂","巨細胞病毒感染","中腦膜動脈破裂","中腦動脈阻塞"],ans:0,exp:"自發性SAH最常見原因為漿果型動脈瘤破裂（約75-80%）。典型症狀：突發「一生中最劇烈的頭痛」。中腦膜動脈破裂→硬腦膜外血腫。"},
+{q:"心肌梗塞病理時序排列：①嗜中性球浸潤 ②巨噬細胞清除 ③凝固性壞死 ④肉芽組織＋膠原纖維",opts:["①④③②","②①④③","③①②④","④②③①"],ans:2,exp:"正確時序：③凝固性壞死（12-24h）→①嗜中性球（1-3天）→②巨噬細胞清除（3-7天）→④肉芽組織＋纖維化（1-8週）"},
+{q:"造成主動脈及分支發炎狹窄（無脈症）的血管炎？",opts:["高安氏動脈炎（Takayasu arteritis）","川崎氏病","韋格納氏肉芽腫","伯格氏病（Buerger）"],ans:0,exp:"高安氏動脈炎：大血管炎，主侵犯主動脈及分支，好發亞洲年輕女性，導致血管狹窄/閉塞，上肢無脈搏。"},
+{q:"鬱血性心衰竭患者肺水腫最相關的機制？",opts:["肺毛細血管靜水壓增加","肺毛細血管膠體滲透壓降低","肺毛細血管通透性增加","肺臟淋巴管阻塞"],ans:0,exp:"左心衰竭→肺靜脈壓↑→肺微血管靜水壓增加→Starling力量失衡→心源性肺水腫。低白蛋白血症引起膠體滲透壓降低機制不同。"},
+{q:"心肌梗塞後多久內，肉眼及光鏡下都沒有明顯變化？",opts:["12小時後","4小時內","1天後","7天後"],ans:1,exp:"AMI最初4小時內光鏡及肉眼均無明顯病理變化（需電鏡才見早期超微結構改變）。約12小時後才見光鏡下凝固性壞死。"},
+{q:"急性心肌梗塞最常見且最重要的病因？",opts:["細菌性心內膜炎導致心肌炎","冠狀動脈痙攣","冠狀動脈粥狀硬化引起血管阻塞","血管炎引起血流減少"],ans:2,exp:"AMI最常見病因：冠狀動脈粥狀硬化斑塊破裂→血栓形成→完全阻塞。最常受累：LAD（左前降支）>RCA>LCX。"}
+];
+const K=["A","B","C","D"];
+
+let order=[],idx=0,chosen=null,log=[];
+let fcOrder=Q.map((_,i)=>i),fcIdx=0,flipped=false,fcSeen=new Set([0]);
+
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+    if(t.dataset.tab==='flash') renderFC();
+  });
+});
+
+function startQuiz(shuffle){
+  order=Q.map((_,i)=>i);
+  if(shuffle) order.sort(()=>Math.random()-.5);
+  idx=0; chosen=null; log=[];
+  document.getElementById('home-view').style.display='none';
+  document.getElementById('result-view').style.display='none';
+  document.getElementById('quiz-view').style.display='block';
+  renderQ();
+}
+
+function renderQ(){
+  const q=Q[order[idx]];
+  document.getElementById('progFill').style.width=((idx/Q.length)*100)+'%';
+  document.getElementById('progLbl').textContent=(idx+1)+' / '+Q.length;
+  document.getElementById('qCard').innerHTML=
+    '<div class="qnum">Q '+(idx+1)+'</div>'+
+    '<div class="qtext">'+q.q+'</div>'+
+    '<div id="opts">'+q.opts.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="opt-key">'+K[i]+'.</span><span>'+o+'</span></button>').join('')+'</div>'+
+    '<div class="expl" id="expl"><b>📋 解析：</b>'+q.exp+'</div>';
+  document.querySelectorAll('.opt').forEach(b=>{
+    b.addEventListener('click',()=>pickOpt(parseInt(b.dataset.i)));
+  });
+  document.getElementById('nextBtn').style.display='none';
+  updateScoreLive();
+}
+
+function pickOpt(i){
+  if(chosen!==null) return;
+  const q=Q[order[idx]];
+  chosen=i;
+  const btns=document.querySelectorAll('.opt');
+  btns.forEach(b=>b.disabled=true);
+  btns[i].classList.add(i===q.ans?'correct':'wrong');
+  if(i!==q.ans) btns[q.ans].classList.add('correct');
+  document.getElementById('expl').classList.add('show');
+  log.push({qi:order[idx],chosen:i,ok:i===q.ans});
+  updateScoreLive();
+  const nb=document.getElementById('nextBtn');
+  nb.style.display='inline-block';
+  nb.textContent=idx+1<Q.length?'下一題 →':'查看成績 🎯';
+}
+
+function updateScoreLive(){
+  const c=log.filter(l=>l.ok).length, w=log.filter(l=>!l.ok).length;
+  document.getElementById('scoreLive').innerHTML='✓ '+c+' &nbsp; ✗ '+w;
+}
+
+function nextQ(){
+  if(idx+1>=Q.length){ showResult(); return; }
+  idx++; chosen=null;
+  renderQ();
+}
+
+function showResult(){
+  document.getElementById('quiz-view').style.display='none';
+  document.getElementById('result-view').style.display='block';
+  const c=log.filter(l=>l.ok).length;
+  const pct=Math.round(c/Q.length*100);
+  document.getElementById('resultPct').textContent=pct+'%';
+  document.getElementById('resultGrade').textContent=
+    pct>=90?'🏆 優秀！保持下去':pct>=75?'👍 良好，再複習幾題':pct>=60?'📚 繼續加油！':'💪 多練習，你可以的';
+  document.getElementById('resCorrect').textContent=c;
+  document.getElementById('resWrong').textContent=Q.length-c;
+  document.getElementById('reviewList').innerHTML=log.map((l,i)=>{
+    const q2=Q[l.qi];
+    return '<div class="review-item '+(l.ok?'review-correct':'review-wrong')+'">'+
+      (l.ok?'✅ ':'❌ ')+'<b>Q'+(i+1)+'.</b> '+q2.q+'<br>'+
+      '<span class="ok">正解：'+K[q2.ans]+'. '+q2.opts[q2.ans]+'</span>'+
+      (!l.ok?'<br><span class="ng">你選：'+K[l.chosen]+'. '+q2.opts[l.chosen]+'</span>':'')+
+      '</div>';
+  }).join('');
+}
+
+function renderFC(){
+  const q=Q[fcOrder[fcIdx]];
+  document.getElementById('fcQ').textContent=q.q;
+  document.getElementById('fcAK').textContent=K[q.ans]+'.';
+  document.getElementById('fcAT').textContent=q.opts[q.ans];
+  document.getElementById('fcExp').textContent=q.exp;
+  document.getElementById('fcCounter').textContent=(fcIdx+1)+' / '+Q.length;
+  document.getElementById('fcCounter2').textContent=(fcIdx+1)+' / '+Q.length;
+  flipped=false;
+  document.getElementById('fcInner').classList.remove('flip');
+  fcSeen.add(fcIdx);
+  renderDots();
+}
+
+function renderDots(){
+  document.getElementById('fcDots').innerHTML=fcOrder.map((_,i)=>
+    '<div class="fc-dot '+(i===fcIdx?'cur':fcSeen.has(i)?'seen':'')+'" data-i="'+i+'"></div>'
+  ).join('');
+  document.querySelectorAll('.fc-dot').forEach(d=>{
+    d.addEventListener('click',e=>{
+      e.stopPropagation();
+      fcIdx=parseInt(d.dataset.i);
+      renderFC();
+    });
+  });
+}
+
+function flipCard(){
+  flipped=!flipped;
+  document.getElementById('fcInner').classList.toggle('flip',flipped);
+}
+
+function navFC(dir){
+  fcIdx=(fcIdx+dir+Q.length)%Q.length;
+  renderFC();
+}
+
+function shuffleFC(){
+  fcOrder=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+  fcIdx=0; fcSeen=new Set([0]);
+  renderFC();
+}
+
+renderFC();
+</script>
+</body>
+</html>
