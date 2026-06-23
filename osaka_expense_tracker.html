@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大阪行記帳 2026/06</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, "Hiragino Sans", "PingFang TC", sans-serif;
+    background: #f4f1ea; color: #2a2622; padding: 16px;
+    max-width: 560px; margin: 0 auto; padding-bottom: 150px;
+  }
+  header { text-align: center; margin-bottom: 18px; }
+  h1 { font-size: 20px; letter-spacing: 1px; font-weight: 700; }
+  .sub { font-size: 12px; color: #8a8178; margin-top: 2px; }
+
+  .summary {
+    background: #2a2622; color: #f4f1ea; border-radius: 14px;
+    padding: 16px; margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .summary .total-jpy { font-size: 26px; font-weight: 700; }
+  .summary .total-twd { font-size: 13px; color: #c9bfae; margin-top: 2px; }
+  .summary .count { font-size: 12px; color: #c9bfae; text-align: right; }
+
+  .paybar { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+  .paychip {
+    flex: 1; min-width: 0; background: #fff; border-radius: 10px;
+    padding: 8px 6px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .paychip .pl { font-size: 10px; color: #9a9085; }
+  .paychip .pv { font-size: 13px; font-weight: 700; margin-top: 2px; }
+
+  .rate-row {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: #8a8178; margin-bottom: 16px; justify-content: center;
+  }
+  .rate-row input {
+    width: 64px; padding: 4px 6px; border: 1px solid #d6cfc2;
+    border-radius: 6px; font-size: 12px; text-align: center; background: #fff;
+  }
+
+  .day-group { margin-bottom: 16px; }
+  .day-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 0 4px 6px; border-bottom: 1px solid #ddd4c6; margin-bottom: 8px;
+  }
+  .day-head .d { font-size: 14px; font-weight: 700; }
+  .day-head .dt { font-size: 12px; color: #8a8178; }
+
+  .item {
+    background: #fff; border-radius: 10px; padding: 12px 14px;
+    margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+  }
+  .item .info { flex: 1; min-width: 0; }
+  .item .name { font-size: 15px; font-weight: 600; }
+  .item .meta { font-size: 11px; color: #9a9085; margin-top: 3px; display:flex; align-items:center; flex-wrap:wrap; gap:4px; }
+  .item .amt { font-size: 15px; font-weight: 700; white-space: nowrap; }
+  .item .del {
+    background: none; border: none; color: #c0392b; font-size: 18px;
+    line-height: 1; padding: 0 0 0 4px; cursor: pointer;
+  }
+  .tag { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 8px; }
+  .cat-food { background: #ffe8d6; color: #b5651d; }
+  .cat-trans { background: #d6e8ff; color: #1d5fb5; }
+  .cat-shop { background: #e8d6ff; color: #6a1db5; }
+  .cat-hotel { background: #d6ffe8; color: #1db56a; }
+  .cat-other { background: #eee; color: #777; }
+  .pay-taishin { background: #ffe0e0; color: #b52a2a; }
+  .pay-cash { background: #e2f0d9; color: #4a7a2a; }
+  .pay-icoca { background: #d9e8ff; color: #2a55b5; }
+  .pay-suica { background: #d9f2ec; color: #1a8a6a; }
+  .pay-other { background: #ece6da; color: #7a7060; }
+
+  .fab-wrap {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    width: 92%; max-width: 540px; display: flex; gap: 10px;
+  }
+  .fab {
+    border: none; padding: 15px; border-radius: 14px; font-size: 16px;
+    font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  }
+  .fab-cam { flex: 2; background: #c0392b; color: #fff; }
+  .fab-add { flex: 1; background: #fff; color: #2a2622; border: 1px solid #d6cfc2; }
+
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+    display: none; align-items: flex-end; justify-content: center; z-index: 10;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: #f4f1ea; width: 100%; max-width: 560px;
+    border-radius: 18px 18px 0 0; padding: 20px; padding-bottom: 28px;
+    max-height: 92vh; overflow-y: auto;
+  }
+  .modal h2 { font-size: 17px; margin-bottom: 4px; }
+  .modal .hint { font-size: 12px; color: #8a8178; margin-bottom: 14px; }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 12px; color: #8a8178; margin-bottom: 4px; }
+  .field input, .field select {
+    width: 100%; padding: 11px; border: 1px solid #d6cfc2;
+    border-radius: 9px; font-size: 16px; background: #fff;
+  }
+  .pick { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pick button {
+    flex: 1; min-width: 56px; padding: 9px 4px; border: 1px solid #d6cfc2;
+    border-radius: 9px; background: #fff; font-size: 13px; cursor: pointer;
+  }
+  .pick button.active { background: #2a2622; color: #fff; border-color: #2a2622; }
+  .modal-btns { display: flex; gap: 10px; margin-top: 8px; }
+  .modal-btns button { flex: 1; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .btn-save { background: #c0392b; color: #fff; }
+  .btn-cancel { background: #e0d9cc; color: #555; }
+  .empty { text-align: center; color: #9a9085; font-size: 13px; padding: 30px 0; }
+
+  .overlay {
+    position: fixed; inset: 0; background: rgba(42,38,34,0.82); z-index: 20;
+    display: none; flex-direction: column; align-items: center; justify-content: center; color: #f4f1ea;
+  }
+  .overlay.show { display: flex; }
+  .spinner {
+    width: 44px; height: 44px; border: 4px solid rgba(244,241,234,0.3);
+    border-top-color: #f4f1ea; border-radius: 50%; animation: spin 0.8s linear infinite;
+    margin-bottom: 14px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .overlay .ot { font-size: 15px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>大阪行記帳</h1>
+  <div class="sub">2026/06/23 – 06/28 · SPR 大阪</div>
+</header>
+
+<div class="summary">
+  <div>
+    <div class="total-jpy" id="totalJpy">¥0</div>
+    <div class="total-twd" id="totalTwd">≈ NT$0</div>
+  </div>
+  <div class="count" id="count">0 筆</div>
+</div>
+
+<div class="paybar" id="paybar"></div>
+
+<div class="rate-row">
+  匯率 1 JPY =
+  <input type="number" id="rate" step="0.001" value="0.21">
+  TWD（可調整）
+</div>
+
+<div id="list"></div>
+
+<div class="fab-wrap">
+  <button class="fab fab-cam" onclick="document.getElementById('camInput').click()">📷 拍收據</button>
+  <button class="fab fab-add" onclick="openModal()">＋ 手動</button>
+</div>
+<input type="file" id="camInput" accept="image/*" capture="environment" style="display:none">
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h2 id="modalTitle">新增花費</h2>
+    <div class="hint" id="modalHint" style="display:none">已自動辨識，請確認後儲存</div>
+    <div class="field">
+      <label>日期</label>
+      <select id="fDate"></select>
+    </div>
+    <div class="field">
+      <label>項目 / 店名</label>
+      <input type="text" id="fName" placeholder="例：午餐 / 計程車 / 伴手禮">
+    </div>
+    <div class="field">
+      <label>金額（日圓）</label>
+      <input type="number" id="fAmt" inputmode="numeric" placeholder="0">
+    </div>
+    <div class="field">
+      <label>付款方式</label>
+      <div class="pick" id="payPick">
+        <button data-pay="taishin" class="active">台新卡</button>
+        <button data-pay="cash">現金</button>
+        <button data-pay="icoca">ICOCA</button>
+        <button data-pay="suica">Suica</button>
+        <button data-pay="other">其他</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>類別</label>
+      <div class="pick" id="catPick">
+        <button data-cat="food" class="active">餐飲</button>
+        <button data-cat="trans">交通</button>
+        <button data-cat="shop">購物</button>
+        <button data-cat="hotel">住宿</button>
+        <button data-cat="other">其他</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>備註（選填）</label>
+      <input type="text" id="fNote" placeholder="品項明細…">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">取消</button>
+      <button class="btn-save" onclick="saveItem()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="spinner"></div>
+  <div class="ot">辨識收據中…</div>
+</div>
+
+<script>
+const DAYS = [
+  {key:'06-23', label:'6/23 (二)'},
+  {key:'06-24', label:'6/24 (三)'},
+  {key:'06-25', label:'6/25 (四)'},
+  {key:'06-26', label:'6/26 (五)'},
+  {key:'06-27', label:'6/27 (六)'},
+  {key:'06-28', label:'6/28 (日)'},
+];
+const CAT_LABEL = {food:'餐飲', trans:'交通', shop:'購物', hotel:'住宿', other:'其他'};
+const PAY_LABEL = {taishin:'台新卡', cash:'現金', icoca:'ICOCA', suica:'Suica', other:'其他'};
+const PAY_ORDER = ['taishin','cash','icoca','suica','other'];
+let items = [];
+let selCat = 'food';
+let selPay = 'taishin';
+
+const seedItems = [
+  {id:'seed1', date:'06-23', name:'牛排沙拉 ステーキサラダ', amt:3168, cat:'food', pay:'taishin', note:'神戶機場 Royal Host'},
+  {id:'seed2', date:'06-23', name:'蛋包飯 オムライス', amt:1463, cat:'food', pay:'taishin', note:'神戶機場 Royal Host'},
+];
+
+async function load() {
+  try {
+    const r = await window.storage.get('osaka_expenses');
+    if (r && r.value) { items = JSON.parse(r.value); }
+    else { items = seedItems.slice(); }
+  } catch(e) { items = seedItems.slice(); }
+  let changed = false;
+  items.forEach(x=>{ if(!x.pay){ x.pay = 'taishin'; changed = true; } });
+  if (changed) await persist();
+  try {
+    const rr = await window.storage.get('osaka_rate');
+    if (rr && rr.value) document.getElementById('rate').value = rr.value;
+  } catch(e){}
+  render();
+}
+async function persist() {
+  try { await window.storage.set('osaka_expenses', JSON.stringify(items)); } catch(e){}
+}
+
+document.getElementById('rate').addEventListener('input', async (e)=>{
+  try { await window.storage.set('osaka_rate', e.target.value); } catch(err){}
+  render();
+});
+
+document.querySelectorAll('#catPick button').forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll('#catPick button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); selCat = b.dataset.cat;
+  };
+});
+document.querySelectorAll('#payPick button').forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll('#payPick button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); selPay = b.dataset.pay;
+  };
+});
+
+function fillDateSelect() {
+  const sel = document.getElementById('fDate');
+  sel.innerHTML = DAYS.map(d=>`<option value="${d.key}">${d.label}</option>`).join('');
+}
+
+function setPickActive(group, val) {
+  document.querySelectorAll('#'+group+' button').forEach(x=>{
+    const key = group==='payPick' ? x.dataset.pay : x.dataset.cat;
+    x.classList.toggle('active', key===val);
+  });
+}
+
+function openModal(prefill) {
+  if (prefill) {
+    document.getElementById('modalTitle').textContent = '確認收據';
+    document.getElementById('modalHint').style.display = 'block';
+    const dkey = DAYS.find(d=>d.key===prefill.date) ? prefill.date : DAYS[0].key;
+    document.getElementById('fDate').value = dkey;
+    document.getElementById('fName').value = prefill.name || '';
+    document.getElementById('fAmt').value = prefill.amt || '';
+    document.getElementById('fNote').value = prefill.note || '';
+    selPay = PAY_LABEL[prefill.pay] ? prefill.pay : 'taishin';
+    selCat = CAT_LABEL[prefill.cat] ? prefill.cat : 'food';
+  } else {
+    document.getElementById('modalTitle').textContent = '新增花費';
+    document.getElementById('modalHint').style.display = 'none';
+    document.getElementById('fName').value = '';
+    document.getElementById('fAmt').value = '';
+    document.getElementById('fNote').value = '';
+    document.getElementById('fDate').value = DAYS[0].key;
+    selCat = 'food'; selPay = 'taishin';
+  }
+  setPickActive('catPick', selCat);
+  setPickActive('payPick', selPay);
+  document.getElementById('modalBg').classList.add('show');
+}
+function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
+
+async function saveItem() {
+  const name = document.getElementById('fName').value.trim();
+  const amt = parseInt(document.getElementById('fAmt').value, 10);
+  const date = document.getElementById('fDate').value;
+  const note = document.getElementById('fNote').value.trim();
+  if (!name || !amt || amt<=0) { alert('請填項目與金額'); return; }
+  items.push({id:'i'+Date.now(), date, name, amt, cat:selCat, pay:selPay, note});
+  await persist();
+  closeModal();
+  render();
+}
+
+async function delItem(id) {
+  items = items.filter(x=>x.id!==id);
+  await persist();
+  render();
+}
+
+// ===== 拍收據辨識 =====
+document.getElementById('camInput').addEventListener('change', async (e)=>{
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = '';
+  document.getElementById('overlay').classList.add('show');
+  try {
+    const b64 = await toBase64(file);
+    const mediaType = file.type || 'image/jpeg';
+    const result = await recognizeReceipt(b64, mediaType);
+    document.getElementById('overlay').classList.remove('show');
+    openModal(result);
+  } catch(err) {
+    document.getElementById('overlay').classList.remove('show');
+    alert('辨識失敗，請改用手動輸入。\n('+(err.message||err)+')');
+    openModal();
+  }
+});
+
+function toBase64(file) {
+  return new Promise((res, rej)=>{
+    const r = new FileReader();
+    r.onload = ()=>res(r.result.split(',')[1]);
+    r.onerror = ()=>rej(new Error('讀檔失敗'));
+    r.readAsDataURL(file);
+  });
+}
+
+async function recognizeReceipt(b64, mediaType) {
+  const prompt = `你是收據辨識助手。從這張收據圖片擷取資訊，只回傳一個 JSON 物件，不要任何說明文字、不要 markdown 圍欄。格式：
+{"store":"店名(簡短)","date":"MM-DD","total":數字,"pay":"taishin|cash|icoca|suica|other","category":"food|trans|shop|hotel|other","items":"主要品項摘要(簡短,逗號分隔)"}
+規則：
+- date 取收據上的消費日期，格式 MM-DD（例 06-24）；讀不到就回 ""。
+- total 取「合計」含稅總金額，純數字、無逗號或符號；讀不到就回 0。
+- pay：出現 クレジット/カード/信用卡/VISA/Master → taishin；現金/CASH → cash；IC/交通系IC/ICOCA → icoca；Suica → suica；其餘 → other。預設 taishin。
+- category：餐廳/咖啡/食物 → food；計程車/電車/JR/地鐵/巴士/車票 → trans；藥妝/百貨/便利商店/商店/伴手禮 → shop；飯店/旅館 → hotel；其餘 → other。`;
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 1000,
+      messages: [{
+        role: "user",
+        content: [
+          { type: "image", source: { type: "base64", media_type: mediaType, data: b64 } },
+          { type: "text", text: prompt }
+        ]
+      }]
+    })
+  });
+  const data = await response.json();
+  const text = (data.content || []).filter(i=>i.type==='text').map(i=>i.text).join('\n');
+  const clean = text.replace(/```json/gi,'').replace(/```/g,'').trim();
+  const j = JSON.parse(clean);
+  return {
+    date: j.date || '',
+    name: j.store || '收據',
+    amt: parseInt(j.total, 10) || 0,
+    pay: j.pay || 'taishin',
+    cat: j.category || 'other',
+    note: j.items || ''
+  };
+}
+
+function render() {
+  const rate = parseFloat(document.getElementById('rate').value) || 0;
+  const total = items.reduce((s,x)=>s+x.amt,0);
+  document.getElementById('totalJpy').textContent = '¥'+total.toLocaleString();
+  document.getElementById('totalTwd').textContent = '≈ NT$'+Math.round(total*rate).toLocaleString();
+  document.getElementById('count').textContent = items.length+' 筆';
+
+  const paySum = {};
+  PAY_ORDER.forEach(p=>paySum[p]=0);
+  items.forEach(x=>{ paySum[x.pay||'taishin'] = (paySum[x.pay||'taishin']||0)+x.amt; });
+  let pb = '';
+  PAY_ORDER.forEach(p=>{
+    if (paySum[p] > 0) pb += `<div class="paychip"><div class="pl">${PAY_LABEL[p]}</div><div class="pv">¥${paySum[p].toLocaleString()}</div></div>`;
+  });
+  document.getElementById('paybar').innerHTML = pb;
+
+  const list = document.getElementById('list');
+  if (items.length===0) { list.innerHTML = '<div class="empty">還沒有任何花費，拍張收據開始吧</div>'; return; }
+
+  let html = '';
+  DAYS.forEach(d=>{
+    const dayItems = items.filter(x=>x.date===d.key);
+    if (dayItems.length===0) return;
+    const dayTotal = dayItems.reduce((s,x)=>s+x.amt,0);
+    html += `<div class="day-group"><div class="day-head"><span class="d">${d.label}</span><span class="dt">¥${dayTotal.toLocaleString()} · ${dayItems.length}筆</span></div>`;
+    dayItems.forEach(x=>{
+      const pay = x.pay || 'taishin';
+      html += `<div class="item"><div class="info"><div class="name">${esc(x.name)}</div><div class="meta"><span class="tag cat-${x.cat}">${CAT_LABEL[x.cat]}</span><span class="tag pay-${pay}">${PAY_LABEL[pay]}</span>${x.note?esc(x.note):''}</div></div><div class="amt">¥${x.amt.toLocaleString()}</div><button class="del" onclick="delItem('${x.id}')">×</button></div>`;
+    });
+    html += '</div>';
+  });
+  list.innerHTML = html;
+}
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+fillDateSelect();
+load();
+</script>
+</body>
+</html>
