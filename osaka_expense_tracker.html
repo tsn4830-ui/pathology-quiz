@@ -227,12 +227,29 @@ let items = [];
 let selCat = 'food';
 let selPay = 'taishin';
 
+// ===== 共用後端設定 =====
+// 把這裡換成你部署好的 Cloudflare Worker 網址(例:'https://osaka-tracker.你的帳號.workers.dev')。
+// 留空字串 '' 則退回單機模式(只存自己手機,不共用)。
+const API_BASE = '';
+const SHARED = !!API_BASE;
+
 const seedItems = [
   {id:'seed1', date:'06-23', name:'牛排沙拉 ステーキサラダ', amt:3168, cat:'food', pay:'taishin', note:'神戶機場 Royal Host'},
   {id:'seed2', date:'06-23', name:'蛋包飯 オムライス', amt:1463, cat:'food', pay:'taishin', note:'神戶機場 Royal Host'},
 ];
 
 async function load() {
+  if (SHARED) {
+    try {
+      const resp = await fetch(API_BASE + '/api/expenses');
+      const data = await resp.json();
+      items = data.items || [];
+      if (data.rate) document.getElementById('rate').value = data.rate;
+    } catch(e) { items = []; }
+    render();
+    return;
+  }
+  // 單機模式
   try {
     const r = await window.storage.get('osaka_expenses');
     if (r && r.value) { items = JSON.parse(r.value); }
@@ -248,12 +265,36 @@ async function load() {
   render();
 }
 async function persist() {
+  if (SHARED) return; // 共用模式由個別 API 呼叫負責,不整批寫
   try { await window.storage.set('osaka_expenses', JSON.stringify(items)); } catch(e){}
 }
 
+// 共用模式:每 6 秒拉一次最新資料,讓大家看到彼此的更新
+if (SHARED) setInterval(async ()=>{
+  if (document.getElementById('modalBg').classList.contains('show')) return; // 編輯中先不刷新
+  try {
+    const resp = await fetch(API_BASE + '/api/expenses');
+    const data = await resp.json();
+    items = data.items || [];
+    render();
+  } catch(e){}
+}, 6000);
+
+let rateTimer = null;
 document.getElementById('rate').addEventListener('input', async (e)=>{
-  try { await window.storage.set('osaka_rate', e.target.value); } catch(err){}
+  const val = e.target.value;
   render();
+  if (SHARED) {
+    clearTimeout(rateTimer);
+    rateTimer = setTimeout(()=>{
+      fetch(API_BASE + '/api/rate', {
+        method: 'PUT', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({rate: val})
+      }).catch(()=>{});
+    }, 600);
+  } else {
+    try { await window.storage.set('osaka_rate', val); } catch(err){}
+  }
 });
 
 document.querySelectorAll('#catPick button').forEach(b=>{
@@ -313,15 +354,29 @@ async function saveItem() {
   const date = document.getElementById('fDate').value;
   const note = document.getElementById('fNote').value.trim();
   if (!name || !amt || amt<=0) { alert('請填項目與金額'); return; }
-  items.push({id:'i'+Date.now(), date, name, amt, cat:selCat, pay:selPay, note});
-  await persist();
+  const item = {id:'i'+Date.now(), date, name, amt, cat:selCat, pay:selPay, note};
+  items.push(item);
+  if (SHARED) {
+    try {
+      await fetch(API_BASE + '/api/expenses', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(item)
+      });
+    } catch(e){ alert('儲存到共用帳本失敗,請檢查網路'); }
+  } else {
+    await persist();
+  }
   closeModal();
   render();
 }
 
 async function delItem(id) {
   items = items.filter(x=>x.id!==id);
-  await persist();
+  if (SHARED) {
+    try { await fetch(API_BASE + '/api/expenses/' + encodeURIComponent(id), {method:'DELETE'}); } catch(e){}
+  } else {
+    await persist();
+  }
   render();
 }
 
@@ -354,6 +409,15 @@ function toBase64(file) {
 }
 
 async function recognizeReceipt(b64, mediaType) {
+  // 共用模式:把辨識交給後端 Worker(金鑰藏在後端,前端不外露)
+  if (SHARED) {
+    const resp = await fetch(API_BASE + '/api/recognize', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ image: b64, mediaType })
+    });
+    if (!resp.ok) throw new Error('辨識服務回應 ' + resp.status);
+    return await resp.json();
+  }
   const prompt = `你是收據辨識助手。從這張收據圖片擷取資訊，只回傳一個 JSON 物件，不要任何說明文字、不要 markdown 圍欄。格式：
 {"store":"店名(簡短)","date":"MM-DD","total":數字,"pay":"taishin|cash|icoca|suica|other","category":"food|trans|shop|hotel|other","items":"主要品項摘要(簡短,逗號分隔)"}
 規則：
