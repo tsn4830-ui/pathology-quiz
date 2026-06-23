@@ -1,0 +1,16 @@
+name = "osaka-tracker"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+# D1 資料庫綁定。建立後把 database_id 換成 `wrangler d1 create` 給你的 ID。
+[[d1_databases]]
+binding = "DB"
+database_name = "osaka_tracker"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+# 可選:限制只允許你的前端網域呼叫(留 "*" 代表不限制)。
+[vars]
+ALLOW_ORIGIN = "*"
+
+# ANTHROPIC_API_KEY 不要寫在這裡!用密鑰指令設定:
+#   wrangler secret put ANTHROPIC_API_KEY
